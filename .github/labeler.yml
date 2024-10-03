@@ -1,18 +1,18 @@
 workflows:
   - changed-files:
-    - any-glob-to-any-file: ['.github/workflows/**/*']
+    - any-glob-to-any-file: [".github/workflows/**/*"]
 
 dependency:
   - changed-files:
-    - any-glob-to-any-file: ['package.json']
+    - any-glob-to-any-file: ["package.json"]
 
 docker:
   - changed-files:
-    - any-glob-to-any-file: ['Dockerfile', 'compose.yaml', '.dockerignore']
+    - any-glob-to-any-file: ["Dockerfile", "compose.yaml", ".dockerignore"]
 
 bug:
-  - head-branch: ['^fix', 'fix', '!code-scanning', '!scanning', '!fix-code-scanning']
+  - head-branch: ["^fix", "fix", "!code-scanning", "!scanning", "!fix-code-scanning"]
 
 github:
   - changed-files:
-    - any-glob-to-any-file: ['.github/**/*']
+    - any-glob-to-any-file: [".github/**/*"]

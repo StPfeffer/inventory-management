@@ -1,13 +1,9 @@
-import { Button } from "./components/ui/button";
+import CustomRoutes from "@/components/routes.tsx";
 
 function App() {
-  return (
-    <div>
-      <Button >
-        Hello, World!
-      </Button>
-    </div>
-  );
+    return (
+        <CustomRoutes/>
+    );
 }
 
 export default App;

@@ -1,0 +1,45 @@
+.hero-shadow {
+    @apply absolute w-[260px] h-[400px] blur-[150px] animate-[shadow-slide_infinite_4s_linear_alternate] rounded-3xl top-[200px];
+    background: hsl(var(--primary) / 0%);
+    rotate: 35deg;
+}
+@keyframes shadow-slide {
+    from {
+        @apply right-[460px];
+        background: hsl(var(--primary) / 20%);
+    }
+    to {
+        @apply right-40;
+        background: hsl(var(--primary) / 80%);
+    }
+}
+@media (max-width: 1024px) {
+    .hero-shadow {
+        @apply top-[70px];
+    }
+    @keyframes shadow-slide {
+        from {
+            @apply right-[460px];
+            background: hsl(var(--primary) / 20%);
+        }
+        to {
+            @apply right-40;
+            background: hsl(var(--primary) / 50%);
+        }
+    }
+}
+@media (max-width: 768px) {
+    .hero-shadow {
+        @apply w-[100px] h-[350px] blur-[60px] top-[70px];
+    }
+    @keyframes shadow-slide {
+        from {
+            @apply right-[280px];
+            background: hsl(var(--primary) / 20%);
+        }
+        to {
+            @apply right-[100px];
+            background: hsl(var(--primary) / 30%);
+        }
+    }
+}

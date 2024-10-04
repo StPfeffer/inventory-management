@@ -31,7 +31,7 @@ export const Hero = () => {
 
                     <a
                         rel="noreferrer noopener"
-                        href="https://github.com/StPfeffer/personal-expense-tracker.git"
+                        href="https://github.com/StPfeffer/inventory-management.git"
                         target="_blank"
                         className={`w-full md:w-1/3 ${buttonVariants({
                             variant: "outline",

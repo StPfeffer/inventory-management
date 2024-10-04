@@ -1,19 +1,28 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth/auth-context-provider";
-import React, { useState } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
-import Link from "next/link";
+import { useState } from "react";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from "@/components/ui/form";
 import { User } from "@/types/user";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { getNextId } from "@/lib/utils";
 
 const formSchema = z.object({
     name: z
@@ -63,20 +72,13 @@ export function RegisterForm() {
     }
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        const existingUsers: User[] = JSON.parse(localStorage.getItem("users") || "[]");
-
-        const lastId = getNextId(existingUsers);
-
         const user: User = {
-            id: lastId,
+            id: -1, // TODO
             name: values.name,
             username: values.username,
             email: values.email,
             password: values.password
         };
-
-        existingUsers.push(user);
-        localStorage.setItem("users", JSON.stringify(existingUsers));
 
         login({ ...user });
     }
@@ -201,9 +203,9 @@ export function RegisterForm() {
 
                         <div className="mt-4 text-center text-sm">
                             Already have an account?{" "}
-                            <Link href="/login" className="underline">
+                            <a href="/login" className="underline">
                                 Log In
-                            </Link>
+                            </a>
                         </div>
                     </form>
                 </Form>

@@ -21,9 +21,11 @@ export const Hero = () => {
                 </p>
 
                 <div className="space-y-4 md:space-y-0 md:space-x-4">
-                    <Button className="w-full md:w-1/3">
+                    <Button className="w-full md:w-1/3 cursor-pointer">
                         <a
+                            rel="noreferrer noopener"
                             href="/dashboard"
+                            className="w-full md:w-1/3"
                         >
                             Get Started
                         </a>

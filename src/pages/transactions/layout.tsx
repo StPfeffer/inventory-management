@@ -1,4 +1,4 @@
-"use client";
+
 
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";

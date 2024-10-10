@@ -11,7 +11,7 @@ function CustomRoutes() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
         
-            <Route path="/costumer" element={Dashboard<CostumerPage />} />
+            <Route path="/costumer" element={<CostumerPage />} />
         </Routes>
     )
 }

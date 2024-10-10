@@ -17,7 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Expense, Transaction } from "@/types/transaction";
 import { useState } from "react";
 
-const Expenses = () => {
+const ExpensesPage = () => {
     const { user } = useAuth();
 
     const [expenses, setExpenses] = useState<Expense[]>(() => {
@@ -94,4 +94,4 @@ const Expenses = () => {
     )
 }
 
-export default Expenses;
+export default ExpensesPage;

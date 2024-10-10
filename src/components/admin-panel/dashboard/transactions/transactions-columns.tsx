@@ -9,7 +9,6 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Switch } from "@/components/ui/switch";
-import { PaymentIcon } from "react-svg-credit-card-payment-icons";
 import { formatDate } from "date-fns";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
@@ -137,7 +136,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
         return null;
       }
 
-      return <PaymentIcon type={card} format="mono" width={45} />
+      return <p>{card}</p>
     }
   },
   {

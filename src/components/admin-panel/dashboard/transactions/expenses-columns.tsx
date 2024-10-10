@@ -13,7 +13,6 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Switch } from "@/components/ui/switch";
 
-import { PaymentIcon } from 'react-svg-credit-card-payment-icons';
 import { formatDate } from "date-fns";
 
 export const expensesColumns: ColumnDef<Expense>[] = [
@@ -125,7 +124,7 @@ export const expensesColumns: ColumnDef<Expense>[] = [
         return null;
       }
 
-      return <PaymentIcon type={card} format="mono" width={45} />
+      return <p>{card}</p>
     }
   },
   {

@@ -23,7 +23,7 @@ import {
 import { Income, Transaction } from "@/types/transaction";
 import { useState } from "react";
 
-const Incomes = () => {
+const IncomesPage = () => {
     const { user } = useAuth();
 
     const [incomes, setIncomes] = useState<Income[]>(() => {
@@ -100,4 +100,4 @@ const Incomes = () => {
     )
 }
 
-export default Incomes;
+export default IncomesPage;

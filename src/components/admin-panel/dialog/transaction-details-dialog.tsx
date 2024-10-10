@@ -12,7 +12,6 @@ import { Switch } from "@/components/ui/switch";
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { Expense, paymentMethodsDetails, Transaction } from "@/types/transaction";
 import { Upload } from "lucide-react";
-import { PaymentIcon } from "react-svg-credit-card-payment-icons";
 
 interface TransactionDetailsDialogProps {
   transaction: Transaction;
@@ -44,7 +43,7 @@ export function TransactionDetailsDialog({
                 return null;
               }
 
-              return <PaymentIcon type={card} format="mono" width={45} />
+              return <p>{card}</p>
             })()}
 
             <div className="flex flex-col">

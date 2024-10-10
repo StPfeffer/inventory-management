@@ -1,7 +1,5 @@
 import {
-    TrendingDown,
     Settings,
-    TrendingUp,
     CreditCard,
     LayoutGrid,
     LucideIcon,
@@ -67,27 +65,16 @@ export function getMenuList(pathname: string): Group[] {
                             active: pathname === "/transactions"
                         },
                         {
-                            href: "/transactions/new",
-                            label: "New Transaction",
-                            active: pathname === "/transactions/new"
+                            href: "/transactions/incomes",
+                            label: "Incomes",
+                            active: pathname.includes("/transactions/incomes"),
+                        },
+                        {
+                            href: "/transactions/expenses",
+                            label: "Expenses",
+                            active: pathname.includes("/transactions/expenses"),
                         }
                     ]
-                },
-                {
-                    href: "/incomes",
-                    label: "Incomes",
-                    active: pathname.includes("/incomes"),
-                    disabled: false,
-                    icon: TrendingUp,
-                    submenus: []
-                },
-                {
-                    href: "/expenses",
-                    label: "Expenses",
-                    active: pathname.includes("/expenses"),
-                    disabled: false,
-                    icon: TrendingDown,
-                    submenus: []
                 }
             ]
         },

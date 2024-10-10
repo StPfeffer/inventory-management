@@ -1,12 +1,10 @@
-"use client";
-
 import { Table } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { types, categories, paymentMethods, cardBrands } from "@/db/dummy/data";
+import { cardBrands, categories, paymentMethods, types } from "@/db/dummy/data";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>

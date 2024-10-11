@@ -47,10 +47,23 @@ export function LoginForm() {
         }
     });
 
+    const adminUser: User = {
+        id: 1,
+        name: "Admin",
+        username: "admin",
+        email: "admin@admin.com",
+        password: "admin",
+    }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         const existingUsers: User[] = JSON.parse(localStorage.getItem("users") || "[]");
 
         const username = values.username;
+
+        if (username === "admin") {
+            login({ ...adminUser });
+        }
+
         const user = existingUsers.find(u => u.username === username);
 
         if (!user) {

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
-import { TransactionsDataTable } from "@/components/data-table/data-table";
+import { DataTable } from "@/components/data-table/data-table";
 import { transactionColumns } from "./transactions/transactions-columns";
 import { Transaction } from "@/types/transaction";
 import { CardInfo } from "./card/types";
@@ -63,7 +63,7 @@ const Dashboard = ({
         </CardHeader>
 
         <CardContent>
-          <TransactionsDataTable columns={transactionColumns} data={transactions} />
+          <DataTable columns={transactionColumns} data={transactions} />
         </CardContent>
       </Card>
 

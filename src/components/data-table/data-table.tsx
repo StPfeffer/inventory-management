@@ -24,9 +24,9 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
-                                                         columns,
-                                                         data,
-                                                     }: DataTableProps<TData, TValue>) {
+    columns,
+    data,
+}: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
         transactionId: false,
@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table}/>
+            <DataTableToolbar table={table} />
 
             <div className="rounded-md border">
                 <Table>
@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
 
-            <DataTablePagination table={table}/>
+            <DataTablePagination table={table} />
         </div>
     );
 }

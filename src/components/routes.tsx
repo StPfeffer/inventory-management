@@ -19,8 +19,7 @@ function CustomRoutes() {
             <Route path="/transactions" element={<DashboardLayout><TransactionsPage /></DashboardLayout>} />
             <Route path="/transactions/incomes" element={<DashboardLayout><IncomesPage /></DashboardLayout>} />
             <Route path="/transactions/expenses" element={<DashboardLayout><ExpensesPage /></DashboardLayout>} />
-        
-            <Route path="/costumer" element={Dashboard<CostumerPage />} />
+            <Route path="/costumer" element={<DashboardLayout><CostumerPage /></DashboardLayout>} />
         </Routes>
     )
 }

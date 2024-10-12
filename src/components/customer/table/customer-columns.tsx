@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table"
-import { Costumer } from "@/types/costumer";
+import { Customer } from "@/types/customer";
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 
-export const CostumerColumns: ColumnDef<Costumer>[] = [
+export const CustomerColumns: ColumnDef<Customer>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,6 +52,6 @@ export const CostumerColumns: ColumnDef<Costumer>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} acessorKey="costumerId" />
+    cell: ({ row }) => <DataTableRowActions row={row} acessorKey="customerId" />
   }
 ];

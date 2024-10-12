@@ -9,7 +9,12 @@ import {
     DropdownMenuTrigger
 } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
-import { ChevronDownIcon, ChevronsUpDown, ChevronUpIcon, EyeIcon } from "lucide-react"
+import {
+    ChevronDownIcon,
+    ChevronsUpDown,
+    ChevronUpIcon,
+    EyeIcon
+} from "lucide-react"
 
 interface DataTableColumnHeaderProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,10 +23,10 @@ interface DataTableColumnHeaderProps<TData, TValue>
 }
 
 export function DataTableColumnHeader<TData, TValue>({
-                                                         column,
-                                                         title,
-                                                         className,
-                                                     }: DataTableColumnHeaderProps<TData, TValue>) {
+    column,
+    title,
+    className,
+}: DataTableColumnHeaderProps<TData, TValue>) {
     if (!column.getCanSort()) {
         return <div className={cn(className)}>{title}</div>
     }
@@ -37,26 +42,26 @@ export function DataTableColumnHeader<TData, TValue>({
                     >
                         <span>{title}</span>
                         {column.getIsSorted() === "desc" ? (
-                            <ChevronDownIcon className="ml-2 h-4 w-4" color="hsl(var(--primary))"/>
+                            <ChevronDownIcon className="ml-2 h-4 w-4" color="hsl(var(--primary))" />
                         ) : column.getIsSorted() === "asc" ? (
-                            <ChevronUpIcon className="ml-2 h-4 w-4" color="hsl(var(--primary))"/>
+                            <ChevronUpIcon className="ml-2 h-4 w-4" color="hsl(var(--primary))" />
                         ) : (
-                            <ChevronsUpDown className="ml-2 h-4 w-4"/>
+                            <ChevronsUpDown className="ml-2 h-4 w-4" />
                         )}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                     <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                        <ChevronUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"/>
+                        <ChevronUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Asc
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                        <ChevronDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"/>
+                        <ChevronDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Desc
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator/>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                        <EyeIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"/>
+                        <EyeIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Hide
                     </DropdownMenuItem>
                 </DropdownMenuContent>

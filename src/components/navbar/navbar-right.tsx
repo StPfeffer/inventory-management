@@ -2,8 +2,8 @@ import { useAuth } from "@/components/auth/auth-context-provider";
 import { Button } from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
-import { UserNav } from "@/components/admin/navbar/user-nav.tsx";
 import { useNavigate } from "react-router-dom";
+import { UserNav } from "../admin-panel/layout/navbar/user-nav";
 
 const NavbarRight = () => {
     const { user } = useAuth();
@@ -33,7 +33,7 @@ const NavbarRight = () => {
                 <Button onClick={() => handleNavigation("/login")}>Sign In</Button>
             }
         </div>
-    )
+    );
 }
 
 export default NavbarRight;

@@ -1,157 +1,34 @@
-import { Banknote, Bitcoin, Circle, CircleDollarSign, CreditCard, DollarSign, Landmark, Receipt, TrendingDown, TrendingUp } from "lucide-react";
+import {
+    TrendingDown,
+    TrendingUp
+} from "lucide-react";
 
-export type Transaction = Income | Expense;
-
-interface BaseTransaction {
+export interface Transaction {
     id: number;
+    date: Date;
+    type: TransactionType;
+    price: number;
+    productId: number | null;
+    orderId: number | null;
+}
+
+export type TransactionType = "entry" | "exit";
+
+interface TransactionTypeDetailsProps {
+    type: TransactionType,
     description: string;
-    amount: number;
-    date: string;
-    notes?: string;
-    category: TransactionCategory;
-    createdAt: string;
-    updatedAt: string;
-    recurring?: boolean;
-    userId: number;
-}
-
-export interface Income extends BaseTransaction {
-}
-
-export interface Expense extends BaseTransaction {
-    type: PaymentType;
-    paymentMethod: PaymentMethod;
-    cardBrand?: CardBrand;
-    transactionId: string | null;
-}
-
-export type PaymentType = "credit" | "debit";
-
-interface PaymentTypeDetails {
-    key: PaymentType;
-    label: string;
     icon: React.ComponentType<{ className?: string }>;
 }
 
-export const paymentTypeDetails: PaymentTypeDetails[] = [
+export const transactionTypeDetails: TransactionTypeDetailsProps[] = [
     {
-        key: "credit",
-        label: "Credit",
-        icon: CreditCard
-    },
-    {
-        key: "debit",
-        label: "Debit",
-        icon: DollarSign
-    }
-];
-
-export type TransactionCategory = "income" | "expense";
-
-interface TransactionCategoryDetails {
-    key: TransactionCategory;
-    label: string;
-    icon: React.ComponentType<{ className?: string }>;
-}
-
-export const transactionCategoriesDetails: TransactionCategoryDetails[] = [
-    {
-        key: "income",
-        label: "Income",
+        type: "entry",
+        description: "Entry",
         icon: TrendingUp
     },
     {
-        key: "expense",
-        label: "Expense",
+        type: "exit",
+        description: "Exit",
         icon: TrendingDown
     }
-];
-
-export type PaymentMethod =
-    | "credit_card"
-    | "debit_card"
-    | "cash"
-    | "paypal"
-    | "bank_transfer"
-    | "crypto"
-    | "check"
-    | "other";
-
-export type CardBrand =
-    | "Alipay"
-    | "Amex"
-    | "Code"
-    | "CodeFront"
-    | "Diners"
-    | "Discover"
-    | "Elo"
-    | "Generic"
-    | "Hiper"
-    | "Hipercard"
-    | "Jcb"
-    | "Maestro"
-    | "Mastercard"
-    | "Mir"
-    | "Paypal"
-    | "Unionpay"
-    | "Visa";
-
-export const cardBrands: CardBrand[] = [
-    "Alipay",
-    "Amex",
-    "Code",
-    "CodeFront",
-    "Diners",
-    "Discover",
-    "Elo",
-    "Generic",
-    "Hiper",
-    "Hipercard",
-    "Jcb",
-    "Maestro",
-    "Mastercard",
-    "Mir",
-    "Paypal",
-    "Unionpay",
-    "Visa"
-];
-
-interface PaymentMethodDetails {
-    label: string;
-    icon: React.ComponentType<{ className?: string }>;
-}
-
-export const paymentMethodsDetails: Record<PaymentMethod, PaymentMethodDetails> = {
-    credit_card: {
-        label: "Credit Card",
-        icon: CreditCard
-    },
-    debit_card: {
-        label: "Debit Card",
-        icon: CreditCard
-    },
-    cash: {
-        label: "Cash",
-        icon: Banknote
-    },
-    paypal: {
-        label: "PayPal",
-        icon: CircleDollarSign
-    },
-    bank_transfer: {
-        label: "Bank Transfer",
-        icon: Landmark
-    },
-    crypto: {
-        label: "Cryptocurrency",
-        icon: Bitcoin
-    },
-    check: {
-        label: "Check",
-        icon: Receipt
-    },
-    other: {
-        label: "Other",
-        icon: Circle
-    }
-};
+]

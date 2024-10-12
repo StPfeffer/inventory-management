@@ -36,12 +36,6 @@ const formSchema = z.object({
             required_error: "Please provide a valid email."
         })
         .email(),
-    username: z
-        .string({
-            required_error: "Please provide a valid username.",
-        })
-        .min(5, "Your username must be at least 5 characters long to be valid.")
-        .max(25, "Your username cannot exceed 25 characters."),
     password: z
         .string({
             required_error: "Please enter your password to continue.",
@@ -58,7 +52,6 @@ export function RegisterForm() {
         defaultValues: {
             name: "",
             email: "",
-            username: "",
             password: ""
         }
     });
@@ -75,7 +68,6 @@ export function RegisterForm() {
         const user: User = {
             id: -1, // TODO
             name: values.name,
-            username: values.username,
             email: values.email,
             password: values.password
         };
@@ -158,22 +150,6 @@ export function RegisterForm() {
                         }
                         {currentStep === 1 &&
                             <>
-                                <FormField
-                                    control={form.control}
-                                    name="username"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Username</FormLabel>
-
-                                            <FormControl>
-                                                <Input {...field} />
-                                            </FormControl>
-
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
                                 <FormField
                                     control={form.control}
                                     name="name"

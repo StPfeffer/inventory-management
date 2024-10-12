@@ -1,6 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
@@ -43,7 +50,7 @@ const pricingList: PricingProps[] = [
             "Advanced Reporting and Analytics",
             "Supplier Management",
             "Priority Customer Support",
-        ],
+        ]
     },
     {
         title: "Enterprise",
@@ -83,9 +90,10 @@ export const Pricing = () => {
                             key={pricing.title}
                             className={cn(
                                 pricing.popular === PopularPlanType.YES
-                                    ? "drop-shadow-xl shadow-black/10 dark:shadow-white/10"
+                                    ? "drop-shadow-xl shadow-black/10 dark:shadow-white/10 border-primary"
                                     : ""
-                                , "w-[330px]")}
+                                , "w-[330px]"
+                            )}
                         >
                             <CardHeader>
                                 <CardTitle className="flex item-center justify-between">
@@ -111,7 +119,7 @@ export const Pricing = () => {
                                 <Button className="w-full">{pricing.buttonText}</Button>
                             </CardContent>
 
-                            <hr className="w-4/5 m-auto mb-4"/>
+                            <hr className="w-4/5 m-auto mb-4" />
 
                             <CardFooter className="flex">
                                 <div className="space-y-4">
@@ -120,7 +128,7 @@ export const Pricing = () => {
                                             key={benefit}
                                             className="flex"
                                         >
-                                            <Check className="text-green-500"/>{" "}
+                                            <Check className="text-green-500" />{" "}
                                             <h3 className="ml-2">{benefit}</h3>
                                         </span>
                                     ))}

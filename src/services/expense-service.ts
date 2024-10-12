@@ -1,38 +1,30 @@
-"use client";
-
-import { transactions } from "@/db/dummy/transactions";
-import { isExpense } from "@/lib/utils";
-import { Expense } from "@/types/transaction";
+import { Transaction } from "@/types/transaction";
 
 // should fetch from an external API in the future
 export class ExpenseService {
 
-  findById(id: number): Expense | null {
-    const expense = this.list().filter(e => e.id === id).at(0);
-    return expense === undefined ? null : expense;
-  }
+    findById(id: number): Transaction | null {
+        const expense = this.list().filter(e => e.id === id).at(0);
+        return expense === undefined ? null : expense;
+    }
 
-  list(): Expense[] {
-    return JSON.parse(localStorage.getItem("expenses") || "[]");
-  }
+    list(): Transaction[] {
+        return JSON.parse(localStorage.getItem("expenses") || "[]");
+    }
 
-  listByUser(userId: number): Expense[] {
-    return this.list().filter(t => t.userId === userId);
-  }
-
-  initialize(userId: number): void {
-    loadDataToLocalStorage("expenses", transactions.filter(t => t.userId === userId).filter(isExpense));
-  }
+    listRecents(): Transaction[] {
+        return JSON.parse(localStorage.getItem("expenses") || "[]");
+    }
 
 }
 
-export const loadDataToLocalStorage = (key: string, data: Expense[]) => {
-  const existingData = localStorage.getItem(key);
+export const loadDataToLocalStorage = (key: string, data: Transaction[]) => {
+    const existingData = localStorage.getItem(key);
 
-  if (!existingData) {
-    localStorage.setItem(key, JSON.stringify(data));
-    return true;
-  }
+    if (!existingData) {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    }
 
-  return false;
+    return false;
 }

@@ -11,28 +11,33 @@ import {
     getSortedRowModel,
     SortingState,
     useReactTable,
-    VisibilityState,
 } from "@tanstack/react-table";
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from "../ui/table";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: TData[],
+    searchable?: boolean;
+    searchPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    searchable = true,
+    searchPlaceholder = "Search..."
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        transactionId: false,
-        recurring: false,
-        cardBrand: false,
-    });
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -41,7 +46,6 @@ export function DataTable<TData, TValue>({
         columns,
         state: {
             sorting,
-            columnVisibility,
             rowSelection,
             columnFilters,
         },
@@ -49,7 +53,6 @@ export function DataTable<TData, TValue>({
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
-        onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -60,7 +63,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} />
+            <DataTableToolbar table={table} searchable={searchable} searchPlaceholder={searchPlaceholder} />
 
             <div className="rounded-md border">
                 <Table>

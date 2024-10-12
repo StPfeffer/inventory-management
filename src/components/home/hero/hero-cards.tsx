@@ -1,11 +1,25 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Button,
+    buttonVariants
+} from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Check } from "lucide-react";
 import { LightBulbIcon } from "@/components/icon/icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from "@/components/ui/avatar";
 
 export const HeroCards = () => {
     return (
@@ -35,19 +49,19 @@ export const HeroCards = () => {
                     <img
                         width={96}
                         height={96}
-                        src="https://via.placeholder.com/150"
-                        alt="project image"
+                        src="assets/kmfacil-logo.png"
+                        alt="Km Fácil"
                         className="absolute grayscale-[0%] -top-12 rounded-full w-24 h-24 aspect-square object-cover"
                     />
-                    <CardTitle className="text-center">Project Garuda</CardTitle>
+                    <CardTitle className="text-center">Km Fácil</CardTitle>
                     <CardDescription className="font-normal text-primary">
-                        ETL Software Integration
+                        Fleet Management System
                     </CardDescription>
                 </CardHeader>
 
                 <CardContent className="text-center pb-2">
                     <p>
-                        Project Garuda is designed to streamline software integrations through efficient ETL processes.
+                        Km Fácil offers a comprehensive solution for managing vehicle fleets efficiently, ensuring optimized operations and cost savings.
                     </p>
                 </CardContent>
 
@@ -55,7 +69,7 @@ export const HeroCards = () => {
                     <div>
                         <a
                             rel="noreferrer noopener"
-                            href="https://github.com/StPfeffer/garuda"
+                            href="https://github.com/kmfacil"
                             target="_blank"
                             className={buttonVariants({
                                 variant: "ghost",

@@ -1,5 +1,8 @@
 import { getNavLinks } from "@/lib/nav-links.ts";
-import { NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu.tsx";
+import {
+    NavigationMenuLink,
+    NavigationMenuList
+} from "@/components/ui/navigation-menu.tsx";
 
 const DesktopNavLinks = () => {
     const links = getNavLinks();

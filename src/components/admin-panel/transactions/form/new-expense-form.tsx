@@ -17,7 +17,7 @@ import {
     getNextId
 } from "@/lib/utils";
 import { DialogClose } from "@/components/ui/dialog";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import {
     Transaction,
     TransactionType
@@ -71,7 +71,7 @@ const NewExpenseForm = ({
         existingExpenses.push(transaction);
         localStorage.setItem("expenses", JSON.stringify(existingExpenses));
 
-        // toast.success("Expense has been created.");
+        toast.success("Expense has been created.");
 
         _onSubmit(transaction);
     }

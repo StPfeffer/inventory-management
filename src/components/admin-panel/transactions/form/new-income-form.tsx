@@ -17,7 +17,7 @@ import {
 } from "@/types/transaction";
 import MoneyInput from "@/components/geral/money-input";
 import { DialogClose } from "@/components/ui/dialog";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import {
     Popover,
     PopoverContent,
@@ -71,7 +71,7 @@ const NewIncomeForm = ({
         existingIncomes.push(transaction);
         localStorage.setItem("incomes", JSON.stringify(existingIncomes));
 
-        // toast.success("Income has been created.");
+        toast.success("Income has been created.");
 
         _onSubmit(transaction);
     }

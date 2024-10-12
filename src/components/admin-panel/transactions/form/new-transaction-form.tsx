@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import MoneyInput from "@/components/geral/money-input";
 import { DialogClose } from "@/components/ui/dialog";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import {
     Transaction,
     TransactionType,
@@ -86,7 +86,7 @@ const NewTransactionForm = ({
         existingTransactions.push(transaction);
         localStorage.setItem("transactions", JSON.stringify(existingTransactions));
 
-        // toast.success("Transaction has been created.");
+        toast.success("Transaction has been created.");
 
         _onSubmit(transaction);
     }

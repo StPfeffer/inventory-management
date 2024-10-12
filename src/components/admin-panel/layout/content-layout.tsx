@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import AdminNavbar from "./navbar/admin-navbar";
 
 interface ContentLayoutProps {
@@ -13,6 +14,8 @@ export function ContentLayout({ title, children }: ContentLayoutProps) {
             <div className="pt-8 pb-8 px-4 sm:px-8">
                 {children}
             </div>
+
+            <Toaster />
         </div>
     );
 }

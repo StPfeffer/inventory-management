@@ -13,9 +13,18 @@ import {
 import { Input } from "@/components/ui/input";
 import MoneyInput from "@/components/geral/money-input";
 import { getNextId } from "@/lib/utils";
-import { DialogClose } from "@/components/ui/dialog";
-// import { toast } from "sonner";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { Product } from "@/types/product";
+import ImageUpload from "@/components/image-upload/image-upload";
 
 const formSchema = z.object({
     name: z
@@ -30,10 +39,9 @@ const formSchema = z.object({
     quantity: z
         .number()
         .gt(-1, "Quantity must be at least 0."),
-    recurring: z
-        .boolean()
-        .default(false)
-        .optional()
+    image: z
+        .instanceof(File)
+        .refine((file) => file.size !== 0, "Please upload an image")
 });
 
 const NewProductForm = ({
@@ -70,7 +78,7 @@ const NewProductForm = ({
         existingTransactions.push(transaction);
         localStorage.setItem("transactions", JSON.stringify(existingTransactions));
 
-        // toast.success("Transaction has been created.");
+        toast.success("Product has been created.");
 
         _onSubmit(transaction);
     }
@@ -133,6 +141,30 @@ const NewProductForm = ({
                         )}
                     />
                 </div>
+
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            Upload Image
+                        </Button>
+                    </DialogTrigger>
+
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle className="text-center">
+                                Upload your product images
+                            </DialogTitle>
+
+                            <DialogDescription className="text-center">
+                                The only file upload you will ever need
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="grid gap-4 py-4">
+                            <ImageUpload />
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
                 <div className="flex justify-end">
                     {closeDialog &&

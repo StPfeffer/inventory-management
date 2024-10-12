@@ -41,15 +41,28 @@ export const productsColumns: ColumnDef<Product>[] = [
         },
     },
     {
+        accessorKey: "image",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Image" sort={false} />
+        ),
+        meta: {
+            label: "Image"
+        }
+    },
+    {
         accessorKey: "name",
-        header: "Name",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Name" />
+        ),
         meta: {
             label: "Name"
         },
     },
     {
         accessorKey: "description",
-        header: "Description",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Description" sort={false} />
+        ),
         meta: {
             label: "Description"
         },
@@ -103,7 +116,9 @@ export const productsColumns: ColumnDef<Product>[] = [
     },
     {
         accessorKey: "supplierId",
-        header: "Supplier",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Supplier" sort={false} />
+        ),
         meta: {
             label: "Supplier"
         },

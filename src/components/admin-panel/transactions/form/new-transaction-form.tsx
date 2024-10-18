@@ -27,7 +27,7 @@ import {
     Transaction,
     TransactionType,
     transactionTypeDetails
-} from "@/types/transaction";
+} from "shared/types/transaction";
 import {
     Popover,
     PopoverContent,

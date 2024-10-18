@@ -17,7 +17,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 import { useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
 

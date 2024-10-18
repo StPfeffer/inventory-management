@@ -9,24 +9,26 @@ interface DataTableToolbarProps<TData> {
     table: Table<TData>;
     searchable?: boolean;
     searchPlaceholder?: string;
+    searchColumn?: string;
 }
 
 export function DataTableToolbar<TData>({
     table,
     searchable = true,
-    searchPlaceholder = "Search..."
+    searchPlaceholder = "Search...",
+    searchColumn
 }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0
 
     return (
         <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center space-x-2">
-                {searchable &&
+                {searchable && searchColumn &&
                     <Input
                         placeholder={searchPlaceholder}
-                        value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
+                        value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
-                            table.getColumn("description")?.setFilterValue(event.target.value)
+                            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
                         }
                         className="h-8 w-[245px] lg:w-[350px]"
                     />

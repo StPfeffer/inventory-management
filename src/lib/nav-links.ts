@@ -1,4 +1,4 @@
-import { NavLinkProps } from "@/components/navbar/types.ts";
+import { NavLinkProps } from "@/components/navbar/types";
 
 export function getNavLinks(): NavLinkProps[] {
     return [

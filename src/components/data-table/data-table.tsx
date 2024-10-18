@@ -29,13 +29,15 @@ interface DataTableProps<TData, TValue> {
     data: TData[],
     searchable?: boolean;
     searchPlaceholder?: string;
+    searchColumn?: string;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     searchable = true,
-    searchPlaceholder = "Search..."
+    searchPlaceholder = "Search...",
+    searchColumn
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -63,7 +65,12 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} searchable={searchable} searchPlaceholder={searchPlaceholder} />
+            <DataTableToolbar
+                table={table}
+                searchable={searchable}
+                searchPlaceholder={searchPlaceholder}
+                searchColumn={searchColumn}
+            />
 
             <div className="rounded-md border">
                 <Table>

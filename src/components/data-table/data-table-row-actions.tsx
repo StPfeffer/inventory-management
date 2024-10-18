@@ -46,14 +46,13 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuItem
                     onClick={() => navigator.clipboard.writeText(row.getValue(acessorKey))}
                 >
-                    Copy external ID
+                    Copy
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                     <Dialog>
-                        <DropdownMenuSeparator />
                         <DialogTrigger>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <div className="w-full h-full">Delete</div>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -65,7 +64,14 @@ export function DataTableRowActions<TData>({
                             </DialogHeader>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="outline">Cancel</Button>
+                                    <Button variant="outline">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <DialogClose asChild>
+                                    <Button>
+                                        Delete
+                                    </Button>
                                 </DialogClose>
                             </DialogFooter>
                         </DialogContent>

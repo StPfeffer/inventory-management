@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 import NewIncomeForm from "../form/new-income-form";
 
 const NewIncomeDialog = ({

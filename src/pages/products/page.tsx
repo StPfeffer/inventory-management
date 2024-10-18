@@ -15,7 +15,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Product } from "@/types/product";
+import { Product } from "shared/types/product";
 import { useState } from "react";
 import NewProductDialog from "@/components/admin-panel/products/dialog/new-product-dialog";
 import { productsColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
@@ -74,7 +74,12 @@ const ProductsPage = () => {
                     </CardHeader>
 
                     <CardContent>
-                        <DataTable columns={productsColumns} data={products} searchPlaceholder="Search products..." />
+                        <DataTable
+                            columns={productsColumns}
+                            data={products}
+                            searchPlaceholder="Search products..."
+                            searchColumn="name"
+                        />
                     </CardContent>
                 </Card>
             </main>

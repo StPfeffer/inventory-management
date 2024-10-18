@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge";

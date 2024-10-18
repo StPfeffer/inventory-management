@@ -1,12 +1,10 @@
-import { Supplier } from "@/types/supplier";
-
 export class SupplierService {
 
-    list(): Supplier[] {
+    list() {
         return JSON.parse(localStorage.getItem("transactions") || "[]");
     }
 
-    find(id: number): Supplier {
+    find(id: number) {
         return JSON.parse(localStorage.getItem("suppliers") || "[]");
     }
 

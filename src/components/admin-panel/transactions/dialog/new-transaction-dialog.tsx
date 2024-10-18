@@ -6,7 +6,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import NewTransactionForm from "../form/new-transaction-form";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 
 const NewTransactionDialog = ({
     _onSubmit

@@ -4,6 +4,7 @@ import "./styles/globals.css";
 import { ThemeProvider } from "./components/theme-provider.tsx";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -12,7 +13,8 @@ createRoot(document.getElementById("root")!).render(
                 defaultTheme="system"
                 storageKey="vite-ui-theme"
             >
-                <App/>
+                <App />
+                <Toaster />
             </ThemeProvider>
         </BrowserRouter>
     </StrictMode>

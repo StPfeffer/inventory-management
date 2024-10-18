@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import {
     Transaction,
     TransactionType
-} from "@/types/transaction";
+} from "shared/types/transaction";
 import {
     Popover,
     PopoverContent,

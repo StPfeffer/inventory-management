@@ -1,5 +1,5 @@
 import { IncomeService } from "@/services/income-service";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 
 const incomeService = new IncomeService();
 
@@ -28,15 +28,3 @@ export function fetchIncomes() {
     return [];
   }
 }
-
-export function fetchIncome(id: string): Transaction | null {
-  try {
-    const income = incomeService.findById(Number.parseInt(id));
-
-    return income;
-  } catch (error) {
-    console.error(error);
-
-    return null;
-  }
-};

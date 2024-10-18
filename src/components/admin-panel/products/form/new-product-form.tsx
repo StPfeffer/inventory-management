@@ -23,7 +23,7 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Product } from "@/types/product";
+import { Product } from "shared/types/product";
 import ImageUpload from "@/components/image-upload/image-upload";
 
 const formSchema = z.object({

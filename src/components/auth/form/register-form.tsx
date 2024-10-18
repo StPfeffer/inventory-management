@@ -21,7 +21,7 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import { User } from "@/types/user";
+import { User } from "shared/types/user";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({

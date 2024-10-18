@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { Product } from "@/types/product";
+import { Product } from "shared/types/product";
 import { fetchSupplier } from "@/actions/supplier/fetch-supplier";
 
 export const productsColumns: ColumnDef<Product>[] = [
@@ -139,6 +139,6 @@ export const productsColumns: ColumnDef<Product>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="transactionId" />
+        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" />
     }
 ];

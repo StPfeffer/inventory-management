@@ -1,5 +1,5 @@
 import { ExpenseService } from "@/services/expense-service";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 
 const expenseService = new ExpenseService();
 
@@ -25,17 +25,5 @@ export function fetchExpenses() {
         console.error(error);
 
         return [];
-    }
-}
-
-export function fetchExpense(id: string): Transaction | null {
-    try {
-        const expense = expenseService.findById(Number.parseInt(id));
-
-        return expense;
-    } catch (error) {
-        console.error(error);
-
-        return null;
     }
 }

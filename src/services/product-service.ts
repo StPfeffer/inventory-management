@@ -1,8 +1,6 @@
-import { Product } from "@/types/product";
-
 export class ProductService {
 
-    list(): Product[] {
+    list() {
         return JSON.parse(localStorage.getItem("transactions") || "[]");
     }
 

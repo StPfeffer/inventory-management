@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import { DataTable } from "@/components/data-table/data-table";
 import { transactionColumns } from "../transactions/data-table/columns/transactions-columns";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 import { CardInfo } from "../transactions/dashboard/card/types";
 import { DashboardPieChart } from "./chart/pie-chart";
 import { DashboardRadarChart } from "./chart/radar-chart";

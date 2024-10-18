@@ -1,7 +1,7 @@
 import {
     Transaction,
     TransactionType
-} from "@/types/transaction";
+} from "shared/types/transaction";
 import { CardInfo } from "./types";
 
 export function calculateCardInfo(transactions: Transaction[]): CardInfo[] {

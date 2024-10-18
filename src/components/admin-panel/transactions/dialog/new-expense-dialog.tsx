@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Transaction } from "@/types/transaction";
+import { Transaction } from "shared/types/transaction";
 import NewExpenseForm from "../form/new-expense-form";
 
 const NewExpenseDialog = ({

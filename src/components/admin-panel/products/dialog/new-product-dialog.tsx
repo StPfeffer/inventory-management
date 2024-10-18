@@ -6,7 +6,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import NewProductForm from "../form/new-product-form";
-import { Product } from "@/types/product";
+import { Product } from "shared/types/product";
 
 const NewProductDialog = ({
     _onSubmit

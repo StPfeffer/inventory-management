@@ -10,7 +10,8 @@ import {
     Package,
     ShoppingCart,
     Store,
-    Users
+    Users,
+    UserRound
 } from "lucide-react";
 
 type Submenu = {
@@ -87,6 +88,14 @@ export function getMenuList(pathname: string): Group[] {
                     active: pathname.includes("/orders"),
                     disabled: false,
                     icon: Store,
+                    submenus: []
+                },
+                {
+                    href: "/customers",
+                    label: "Customers",
+                    active: pathname.includes("/customers"),
+                    disabled: false,
+                    icon: UserRound,
                     submenus: []
                 },
                 {

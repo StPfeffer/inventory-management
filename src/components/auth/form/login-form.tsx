@@ -21,7 +21,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { User } from "@/types/user";
+import { User } from "shared/types/user";
 
 const formSchema = z.object({
     email: z

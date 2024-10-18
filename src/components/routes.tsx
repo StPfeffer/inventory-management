@@ -11,6 +11,7 @@ import DashboardPage from "@/pages/dashboard";
 import DashboardLayout from "./admin-layout";
 import TransactionsPage from "@/pages/transactions/page";
 import ProductsPage from "@/pages/products/page";
+import CustomersPage from "@/pages/customers/page";
 
 function CustomRoutes() {
     return (
@@ -23,6 +24,7 @@ function CustomRoutes() {
             <Route path="/transactions/incomes" element={<DashboardLayout><IncomesPage /></DashboardLayout>} />
             <Route path="/transactions/expenses" element={<DashboardLayout><ExpensesPage /></DashboardLayout>} />
             <Route path="/inventory/products" element={<DashboardLayout><ProductsPage /></DashboardLayout>} />
+            <Route path="/customers" element={<DashboardLayout><CustomersPage /></DashboardLayout>} />
         </Routes>
     )
 }

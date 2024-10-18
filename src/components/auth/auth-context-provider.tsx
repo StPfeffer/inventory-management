@@ -6,7 +6,7 @@ import {
     useEffect,
     useState
 } from "react";
-import { User } from "@/types/user.ts";
+import { User } from "shared/types/user.ts";
 
 interface AuthContextType {
     user: User | null;

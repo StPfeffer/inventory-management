@@ -15,6 +15,8 @@ import { DialogClose } from "@/components/ui/dialog";
 import { Customer } from "shared/types/customer";
 import { createCustomer } from "@/actions/customer/create-customer";
 import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     name: z
@@ -43,6 +45,7 @@ const NewCustomerForm = ({
     });
 
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const customer: Customer = {
@@ -60,9 +63,16 @@ const NewCustomerForm = ({
                 description: response.error.message
             })
         } else {
-            toast({
+            toast({ 
                 title: "Success",
-                description: "Customer has been created."
+                description: response.success?.message,
+                action: (
+                    <ToastAction
+                        onClick={() => navigate("/customers/" + response.success?.data?.id)}
+                        altText="View customer">
+                        View
+                    </ToastAction>
+                ),
             });
         }
 

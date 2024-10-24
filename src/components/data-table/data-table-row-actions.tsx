@@ -18,6 +18,7 @@ import {
     DialogTitle,
     DialogTrigger
 } from "../ui/dialog";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>,
@@ -28,6 +29,11 @@ export function DataTableRowActions<TData>({
     row,
     acessorKey
 }: DataTableRowActionsProps<TData>) {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const path = location.pathname + "/" + row.getValue(acessorKey);
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -40,6 +46,9 @@ export function DataTableRowActions<TData>({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(path)}>
+                    View
+                </DropdownMenuItem>
                 <DropdownMenuItem disabled>
                     Edit
                 </DropdownMenuItem>

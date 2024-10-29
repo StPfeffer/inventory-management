@@ -12,75 +12,120 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import MoneyInput from "@/components/geral/money-input";
-import { getNextId } from "@/lib/utils";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 import { Product } from "shared/types/product";
 import ImageUpload from "@/components/image-upload/image-upload";
+import { createProduct } from "@/actions/products/create-product";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Supplier } from "shared/types/supplier";
+import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
 
 const formSchema = z.object({
     name: z
         .string({ required_error: "Please enter a name.", })
-        .min(10, "Name must contain at least 5 characters."),
+        .min(10, "Name must contain at least 10 characters."),
     description: z
         .string({ required_error: "Please enter a description.", })
-        .min(10, "Description must contain at least 10 characters."),
+        .min(20, "Description must contain at least 20 characters."),
     price: z
         .number()
         .gt(0, "Price must be greater than 0."),
     quantity: z
-        .number()
-        .gt(-1, "Quantity must be at least 0."),
+        .string().refine((val) => !Number.isNaN(parseFloat(val)), {
+            message: "Expected number, received a string"
+        }),
     image: z
         .instanceof(File)
-        .refine((file) => file.size !== 0, "Please upload an image")
+        .refine((file) => file.size !== 0, "Please upload an image"),
+    supplierId: z
+        .number({ required_error: "Please select a supplier." })
 });
 
 const NewProductForm = ({
-    _onSubmit,
-    closeDialog = true
+    _onSubmit
 }: {
-    _onSubmit: (transaction: Product) => void,
-    closeDialog?: boolean
+    _onSubmit: () => void
 }) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            description: "",
-            quantity: 0,
+            quantity: "0",
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const existingTransactions: Product[] = JSON.parse(localStorage.getItem("transactions") || "[]");
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
-        const lastId = getNextId(existingTransactions);
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedProducts = await fetchSuppliers();
 
-        const transaction: Product = {
-            id: lastId,
+            if (fetchedProducts.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedProducts.error.message
+                })
+            } else {
+                setSuppliers(fetchedProducts?.success?.data);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const { toast } = useToast();
+    const navigate = useNavigate();
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const product: Product = {
             name: values.name,
             description: values.description,
             price: values.price,
-            quantity: values.quantity,
-            image: "", // values.image,
-            supplierId: 1 // values.supplier.id,
+            quantity: parseFloat(values.quantity),
+            image: "",
+            supplierId: values.supplierId
         }
 
-        existingTransactions.push(transaction);
-        localStorage.setItem("transactions", JSON.stringify(existingTransactions));
+        const response = await createProduct(product);
 
-        toast.success("Product has been created.");
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            })
+        } else {
+            toast({
+                title: "Success",
+                description: response.success?.message,
+                action: (
+                    <ToastAction
+                        onClick={() => navigate("/products/" + response.success?.data?.id)}
+                        altText="View product">
+                        View
+                    </ToastAction>
+                ),
+            });
+        }
 
-        _onSubmit(transaction);
+        _onSubmit();
     }
 
     return (
@@ -142,6 +187,48 @@ const NewProductForm = ({
                     />
                 </div>
 
+                <FormField
+                    control={form.control}
+                    name="supplierId"
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Supplier</FormLabel>
+
+                            <FormControl>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value?.toString()}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue
+                                                placeholder={suppliers ? "Select a supplier" : "No suppliers found"}
+                                                {...field}
+                                            />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Suppliers</SelectLabel>
+
+                                            {suppliers && suppliers.map((supplier) =>
+                                                <SelectItem
+                                                    key={supplier.id}
+                                                    value={supplier.id ? supplier.id.toString() : ""}
+                                                >
+                                                    {supplier.name}
+                                                </SelectItem>
+                                            )}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button variant="outline">
@@ -167,14 +254,7 @@ const NewProductForm = ({
                 </Dialog>
 
                 <div className="flex justify-end">
-                    {closeDialog &&
-                        <DialogClose asChild>
-                            <Button type="submit">Create</Button>
-                        </DialogClose>
-                    }
-                    {!closeDialog &&
-                        <Button type="submit">Create</Button>
-                    }
+                    <Button type="submit">Create</Button>
                 </div>
             </form>
         </Form >

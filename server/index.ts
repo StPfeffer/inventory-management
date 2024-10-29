@@ -1,7 +1,6 @@
 import express from 'express';
 import router from './routes';
 import cors from "cors";
-import db from "./db";
 
 const app = express();
 const port = 3001;

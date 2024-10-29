@@ -19,7 +19,7 @@ export const createCustomer = async (customer: Customer): Promise<ActionResponse
 
     return {
       error: {
-        message: "An error occurred when trying to search for customers, please try again later",
+        message: "An error occurred when trying to create the customer, please try again later",
         data: []
       }
     };

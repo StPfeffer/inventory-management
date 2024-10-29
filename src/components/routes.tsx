@@ -13,6 +13,9 @@ import TransactionsPage from "@/pages/transactions/page";
 import ProductsPage from "@/pages/products/page";
 import CustomersPage from "@/pages/customers/page";
 import CustomerDetailsPage from "@/pages/customers/details";
+import ProductDetailsPage from "@/pages/products/details";
+import SuppliersPage from "@/pages/supplier/page";
+import SupplierDetailsPage from "@/pages/supplier/details";
 
 function CustomRoutes() {
     return (
@@ -25,6 +28,9 @@ function CustomRoutes() {
             <Route path="/transactions/incomes" element={<DashboardLayout><IncomesPage /></DashboardLayout>} />
             <Route path="/transactions/expenses" element={<DashboardLayout><ExpensesPage /></DashboardLayout>} />
             <Route path="/inventory/products" element={<DashboardLayout><ProductsPage /></DashboardLayout>} />
+            <Route path="/inventory/products/:productId" element={<DashboardLayout><ProductDetailsPage /></DashboardLayout>} />
+            <Route path="/inventory/suppliers" element={<DashboardLayout><SuppliersPage /></DashboardLayout>} />
+            <Route path="/inventory/suppliers/:supplierId" element={<DashboardLayout><SupplierDetailsPage /></DashboardLayout>} />
             <Route path="/customers" element={<DashboardLayout><CustomersPage /></DashboardLayout>} />
             <Route path="/customers/:customerId" element={<DashboardLayout><CustomerDetailsPage /></DashboardLayout>} />
         </Routes>

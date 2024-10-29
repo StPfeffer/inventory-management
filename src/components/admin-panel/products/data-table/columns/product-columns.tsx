@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Product } from "shared/types/product";
-import { fetchSupplier } from "@/actions/supplier/fetch-supplier";
+import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
 
 export const productsColumns: ColumnDef<Product>[] = [
     {
@@ -125,7 +125,7 @@ export const productsColumns: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             const supplierId = row.getValue("supplierId");
 
-            const supplier = fetchSupplier(supplierId as number);
+            const supplier = fetchSuppliers(supplierId as number);
 
             return (
                 <span>

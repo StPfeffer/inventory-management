@@ -1,7 +1,7 @@
 export interface Supplier {
-    id: number;
+    id?: number;
     name: string;
-    cnpj: string;
+    document: string;
     contact: string;
     address: string;
 }

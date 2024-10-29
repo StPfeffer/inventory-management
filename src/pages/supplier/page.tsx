@@ -15,29 +15,29 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Product } from "shared/types/product";
 import { useEffect, useState } from "react";
-import NewProductDialog from "@/components/admin-panel/products/dialog/new-product-dialog";
-import { productsColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
-import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
+import { Supplier } from "shared/types/supplier";
+import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
+import NewSupplierDialog from "@/components/admin-panel/suppliers/dialog/new-supplier-dialog";
+import { supplierColumns } from "@/components/admin-panel/suppliers/data-table/columns/supplier-columns";
 
-const ProductsPage = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+const SuppliersPage = () => {
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
     const { toast } = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
-            const fetchedProducts = await fetchProducts();
+            const fetchedSuppliers = await fetchSuppliers();
 
-            if (fetchedProducts.error) {
+            if (fetchedSuppliers.error) {
                 toast({
                     title: "Error",
-                    description: fetchedProducts.error.message
+                    description: fetchedSuppliers.error.message
                 })
             } else {
-                setProducts(fetchedProducts?.success?.data);
+                setSuppliers(fetchedSuppliers?.success?.data);
             }
         };
 
@@ -59,7 +59,7 @@ const ProductsPage = () => {
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbPage>
-                                Products
+                                Suppliers
                             </BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
@@ -73,23 +73,23 @@ const ProductsPage = () => {
                     <CardHeader className="flex flex-row items-center">
                         <div className="grid gap-2">
                             <CardTitle>
-                                Products
+                                Suppliers
                             </CardTitle>
                             <CardDescription>
-                                A detailed overview of all products.
+                                A detailed overview of all suppliers.
                             </CardDescription>
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewProductDialog />
+                            <NewSupplierDialog />
                         </div>
                     </CardHeader>
 
                     <CardContent>
                         <DataTable
-                            columns={productsColumns}
-                            data={products}
-                            searchPlaceholder="Search products..."
+                            columns={supplierColumns}
+                            data={suppliers}
+                            searchPlaceholder="Search suppliers..."
                             searchColumn="name"
                         />
                     </CardContent>
@@ -99,4 +99,4 @@ const ProductsPage = () => {
     )
 }
 
-export default ProductsPage;
+export default SuppliersPage;

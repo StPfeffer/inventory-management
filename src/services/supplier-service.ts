@@ -1,11 +1,18 @@
+import { axiosInstance } from "@/lib/axios";
+import { Supplier } from "shared/types/supplier";
+
 export class SupplierService {
 
     list() {
-        return JSON.parse(localStorage.getItem("transactions") || "[]");
+        return axiosInstance.get("api/suppliers");
     }
 
     find(id: number) {
-        return JSON.parse(localStorage.getItem("suppliers") || "[]");
+        return axiosInstance.get("api/suppliers/" + id);
+    }
+
+    save(supplier: Supplier) {
+        return axiosInstance.post("api/suppliers", supplier);
     }
 
 }

@@ -11,11 +11,11 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Customer } from "shared/types/customer";
-import { createCustomer } from "@/actions/customer/create-customer";
-import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { Supplier } from "shared/types/supplier";
+import { createSupplier } from "@/actions/supplier/create-supplier";
 
 const formSchema = z.object({
     name: z
@@ -32,7 +32,7 @@ const formSchema = z.object({
         .min(10, "Adress must be at least 10 characters.")
 });
 
-const NewCustomerForm = ({
+const NewSupplierForm = ({
     _onSubmit
 }: {
     _onSubmit: () => void
@@ -45,14 +45,14 @@ const NewCustomerForm = ({
     const navigate = useNavigate();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const customer: Customer = {
+        const supplier: Supplier = {
             name: values.name,
             document: values.document,
             contact: values.contact,
             address: values.address,
         }
 
-        const response = await createCustomer(customer);
+        const response = await createSupplier(supplier);
 
         if (response.error) {
             toast({
@@ -65,7 +65,7 @@ const NewCustomerForm = ({
                 description: response.success?.message,
                 action: (
                     <ToastAction
-                        onClick={() => navigate("/customers/" + response.success?.data?.id)}
+                        onClick={() => navigate("/suppliers/" + response.success?.data?.id)}
                         altText="View customer">
                         View
                     </ToastAction>
@@ -153,4 +153,4 @@ const NewCustomerForm = ({
     )
 }
 
-export default NewCustomerForm;
+export default NewSupplierForm;

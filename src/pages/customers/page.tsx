@@ -44,12 +44,6 @@ const CustomersPage = () => {
         fetchData();
     }, []);
 
-    const addCustomer = (newCustomer: Customer) => {
-        const updatedCustomers = [...customers, newCustomer];
-        setCustomers(updatedCustomers);
-        localStorage.setItem("customers", JSON.stringify(updatedCustomers));
-    };
-
     return (
         <ContentLayout title="Customers">
             <div className="flex w-full justify-between">
@@ -87,7 +81,7 @@ const CustomersPage = () => {
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewCustomerDialog _onSubmit={addCustomer} />
+                            <NewCustomerDialog />
                         </div>
                     </CardHeader>
 

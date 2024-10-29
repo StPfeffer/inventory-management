@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 
 export interface Transaction {
-    id: number;
+    id?: number;
     date: Date;
     type: TransactionType;
     price: number;

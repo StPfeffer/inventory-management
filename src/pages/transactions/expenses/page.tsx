@@ -18,19 +18,31 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Transaction } from "shared/types/transaction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
+import { useToast } from "@/hooks/use-toast";
 
 const ExpensesPage = () => {
-    const [expenses, setExpenses] = useState<Transaction[]>(() => {
-        return fetchExpenses();
-    });
+    const [expenses, setExpenses] = useState<Transaction[]>([]);
 
-    const addExpense = (newExpenseTransaction: Transaction) => {
-        const updatedExpenses = [...expenses, newExpenseTransaction];
-        setExpenses(updatedExpenses);
-        localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
-    };
+    const { toast } = useToast();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedExpenses = await fetchExpenses();
+
+            if (fetchedExpenses.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedExpenses.error.message
+                })
+            } else {
+                setExpenses(fetchedExpenses?.success?.data);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <ContentLayout title="Expenses">
@@ -75,12 +87,16 @@ const ExpensesPage = () => {
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewExpenseDialog _onSubmit={addExpense} />
+                            <NewExpenseDialog />
                         </div>
                     </CardHeader>
 
                     <CardContent>
-                        <DataTable columns={expensesColumns} data={expenses} searchPlaceholder="Search expenses..." />
+                        <DataTable
+                            columns={expensesColumns}
+                            data={expenses}
+                            searchPlaceholder="Search expenses..."
+                        />
                     </CardContent>
                 </Card>
             </main>

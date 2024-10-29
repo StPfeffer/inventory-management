@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import NewSupplierForm from "../form/new-supplier-dialog";
+import NewSupplierForm from "../form/new-supplier-form";
 import { useState } from "react";
 
 const NewSupplierDialog = () => {

@@ -48,7 +48,7 @@ export function DashboardRadarChart() {
                 <CardTitle>Categories</CardTitle>
 
                 <CardDescription>
-                    Showing total transactions by category for the last 6 months
+                    Showing total transactions by type for the last 6 months
                 </CardDescription>
             </CardHeader>
 

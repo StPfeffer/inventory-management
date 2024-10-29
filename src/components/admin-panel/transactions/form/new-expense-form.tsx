@@ -13,11 +13,7 @@ import {
 } from "@/components/ui/form";
 import MoneyInput from "@/components/geral/money-input";
 import {
-    cn,
-    getNextId
-} from "@/lib/utils";
-import { DialogClose } from "@/components/ui/dialog";
-import { toast } from "sonner";
+    cn} from "@/lib/utils";
 import {
     Transaction,
     TransactionType
@@ -30,6 +26,10 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { createTransaction } from "@/actions/transactions/create-transaction";
 
 const formSchema = z.object({
     date: z.date({
@@ -41,11 +41,9 @@ const formSchema = z.object({
 });
 
 const NewExpenseForm = ({
-    _onSubmit,
-    closeDialog = true
+    _onSubmit
 }: {
-    _onSubmit: (expense: Transaction) => void,
-    closeDialog?: boolean
+    _onSubmit: () => void
 }) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -54,26 +52,40 @@ const NewExpenseForm = ({
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const existingExpenses: Transaction[] = JSON.parse(localStorage.getItem("transactions") || "[]");
+    const { toast } = useToast();
+    const navigate = useNavigate();
 
-        const lastId = getNextId(existingExpenses);
-
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         const transaction: Transaction = {
-            id: lastId,
             price: values.price,
             date: values.date,
             type: "exit" as TransactionType,
-            productId: -1,
+            productId: null,
             orderId: null
         }
 
-        existingExpenses.push(transaction);
-        localStorage.setItem("expenses", JSON.stringify(existingExpenses));
+        const response = await createTransaction(transaction);
 
-        toast.success("Expense has been created.");
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            })
+        } else {
+            toast({
+                title: "Success",
+                description: response.success?.message,
+                action: (
+                    <ToastAction
+                        onClick={() => navigate("/expenses/" + response.success?.data?.id)}
+                        altText="View expense">
+                        View
+                    </ToastAction>
+                ),
+            });
+        }
 
-        _onSubmit(transaction);
+        _onSubmit();
     }
 
     return (
@@ -135,14 +147,7 @@ const NewExpenseForm = ({
                 </div>
 
                 <div className="flex justify-end">
-                    {closeDialog &&
-                        <DialogClose asChild>
-                            <Button type="submit">Create</Button>
-                        </DialogClose>
-                    }
-                    {!closeDialog &&
-                        <Button type="submit">Create</Button>
-                    }
+                    <Button type="submit">Create</Button>
                 </div>
             </form>
         </Form >

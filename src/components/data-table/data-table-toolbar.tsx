@@ -30,15 +30,7 @@ export function DataTableToolbar<TData>({
                         className="h-8 w-[245px] lg:w-[350px]"
                     />
                 }
-                {/* <div className="hidden sm:flex space-x-1">
-                    {table.getAllColumns().find(x => x.id === "category") && (
-                        <DataTableFacetedFilter
-                            column={table.getColumn("category")}
-                            title="Category"
-                            options={categories}
-                        />
-                    )}
-                    {table.getAllColumns().find(x => x.id === "type") && (
+                {/*{table.getAllColumns().find(x => x.id === "type") && (
                         <DataTableFacetedFilter
                             column={table.getColumn("type")}
                             title="Type"

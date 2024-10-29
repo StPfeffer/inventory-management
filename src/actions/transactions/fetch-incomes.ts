@@ -1,30 +1,49 @@
 import { IncomeService } from "@/services/income-service";
+import { ActionResponse } from "@/types/action";
 import { Transaction } from "shared/types/transaction";
 
 const incomeService = new IncomeService();
 
-export function fetchRecentIncomes() {
-  try {
-    const incomes = incomeService.listRecents();
+export const fetchRecentIncomes = async (): Promise<ActionResponse> => {
+    try {
+        const incomes = await incomeService.listRecents();
 
-    return (incomes as Transaction[])
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
-  } catch (error) {
-    console.error(error);
+        return {
+            success: {
+                message: "",
+                data: incomes.data as Transaction[]
+            }
+        };
+    } catch (error: any) {
+        console.log(error);
 
-    return [];
-  }
+        return {
+            error: {
+                message: "An error occurred when trying to search for incomes, please try again later",
+                data: []
+            }
+        };
+    }
 }
 
-export function fetchIncomes() {
-  try {
-    const incomes = incomeService.list();
+export const fetchIncomes = async (): Promise<ActionResponse> => {
+    try {
+        const incomes = await incomeService.list();
 
-    return incomes as [];
-  } catch (error) {
-    console.error(error);
+        return {
+            success: {
+                message: "",
+                data: incomes.data as Transaction[]
+            }
+        };
+    } catch (error: any) {
+        console.log(error);
 
-    return [];
-  }
+        return {
+            error: {
+                message: "An error occurred when trying to search for incomes, please try again later",
+                data: []
+            }
+        };
+    }
 }

@@ -1,30 +1,49 @@
 import { TransactionService } from "@/services/transaction-service";
+import { ActionResponse } from "@/types/action";
 import { Transaction } from "shared/types/transaction";
 
 const transactionService = new TransactionService();
 
-export function fetchRecentTransactions(): Transaction[] {
+export const fetchRecentExpenses = async (): Promise<ActionResponse> => {
   try {
-    const transactions = transactionService.listRecents();
+    const transactions = await transactionService.listRecents();
 
-    return (transactions as Transaction[])
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
-  } catch (error) {
-    console.error(error);
+    return {
+      success: {
+        message: "",
+        data: transactions.data as Transaction[]
+      }
+    };
+  } catch (error: any) {
+    console.log(error);
 
-    return [];
+    return {
+      error: {
+        message: "An error occurred when trying to search for transactions, please try again later",
+        data: []
+      }
+    };
   }
 }
 
-export function fetchTransactions() {
+export const fetchTransactions = async (): Promise<ActionResponse> => {
   try {
-    const transactions = transactionService.list();
+    const transactions = await transactionService.list();
 
-    return transactions as [];
-  } catch (error) {
-    console.error(error);
+    return {
+      success: {
+        message: "",
+        data: transactions.data as Transaction[]
+      }
+    };
+  } catch (error: any) {
+    console.log(error);
 
-    return [];
+    return {
+      error: {
+        message: "An error occurred when trying to search for transactions, please try again later",
+        data: []
+      }
+    };
   }
 }

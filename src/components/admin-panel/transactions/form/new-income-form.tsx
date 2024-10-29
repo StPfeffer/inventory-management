@@ -17,19 +17,21 @@ import {
 } from "shared/types/transaction";
 import MoneyInput from "@/components/geral/money-input";
 import { DialogClose } from "@/components/ui/dialog";
-import { toast } from "sonner";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover";
 import {
-    cn,
-    getNextId
+    cn
 } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { ToastAction } from "@/components/ui/toast";
+import { createTransaction } from "@/actions/transactions/create-transaction";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     date: z.date({
@@ -41,11 +43,9 @@ const formSchema = z.object({
 });
 
 const NewIncomeForm = ({
-    _onSubmit,
-    closeDialog = true
+    _onSubmit
 }: {
-    _onSubmit: (transaction: Transaction) => void,
-    closeDialog?: boolean
+    _onSubmit: () => void
 }) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -54,26 +54,40 @@ const NewIncomeForm = ({
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const existingIncomes: Transaction[] = JSON.parse(localStorage.getItem("incomes") || "[]");
+    const { toast } = useToast();
+    const navigate = useNavigate();
 
-        const lastId = getNextId(existingIncomes);
-
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         const transaction: Transaction = {
-            id: lastId,
             price: values.price,
             date: values.date,
             type: "entry" as TransactionType,
-            productId: -1,
+            productId: null,
             orderId: null
         }
 
-        existingIncomes.push(transaction);
-        localStorage.setItem("incomes", JSON.stringify(existingIncomes));
+        const response = await createTransaction(transaction);
 
-        toast.success("Income has been created.");
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            })
+        } else {
+            toast({
+                title: "Success",
+                description: response.success?.message,
+                action: (
+                    <ToastAction
+                        onClick={() => navigate("/incomes/" + response.success?.data?.id)}
+                        altText="View income">
+                        View
+                    </ToastAction>
+                ),
+            });
+        }
 
-        _onSubmit(transaction);
+        _onSubmit();
     }
 
     return (
@@ -135,14 +149,7 @@ const NewIncomeForm = ({
                 </div>
 
                 <div className="flex justify-end">
-                    {closeDialog &&
-                        <DialogClose asChild>
-                            <Button type="submit">Create</Button>
-                        </DialogClose>
-                    }
-                    {!closeDialog &&
-                        <Button type="submit">Create</Button>
-                    }
+                    <Button type="submit">Create</Button>
                 </div>
             </form>
         </Form >

@@ -1,29 +1,49 @@
 import { ExpenseService } from "@/services/expense-service";
+import { ActionResponse } from "@/types/action";
 import { Transaction } from "shared/types/transaction";
 
 const expenseService = new ExpenseService();
 
-export function fetchRecentExpenses() {
+export const fetchRecentExpenses = async (): Promise<ActionResponse> => {
     try {
-        const expenses = expenseService.listRecents();
+        const expenses = await expenseService.listRecents();
 
-        return (expenses as Transaction[])
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .slice(0, 5);
-    } catch (error) {
-        console.error(error);
+        return {
+            success: {
+                message: "",
+                data: expenses.data as Transaction[]
+            }
+        };
+    } catch (error: any) {
+        console.log(error);
 
-        return [];
+        return {
+            error: {
+                message: "An error occurred when trying to search for expenses, please try again later",
+                data: []
+            }
+        };
     }
 }
 
-export function fetchExpenses() {
+export const fetchExpenses = async (): Promise<ActionResponse> => {
     try {
-        const expenses = expenseService.list();
-        return expenses as [];
-    } catch (error) {
-        console.error(error);
+        const expenses = await expenseService.list();
 
-        return [];
+        return {
+            success: {
+                message: "",
+                data: expenses.data as Transaction[]
+            }
+        };
+    } catch (error: any) {
+        console.log(error);
+
+        return {
+            error: {
+                message: "An error occurred when trying to search for expenses, please try again later",
+                data: []
+            }
+        };
     }
 }

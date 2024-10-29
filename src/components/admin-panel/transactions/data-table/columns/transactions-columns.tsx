@@ -90,7 +90,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
                 currency: "USD",
             }).format(price);
 
-            const color = row.getValue("category") === "income" ? "text-green-600" : "text-red-600";
+            const color = row.getValue("type") === "entry" ? "text-green-600" : "text-red-600";
 
             return <div className={`text-right font-semibold ` + (color)}>{formatted}</div>
         },

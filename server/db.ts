@@ -60,11 +60,11 @@ try {
 
         CREATE TABLE IF NOT EXISTS kf_transaction (
             id INTEGER PRIMARY KEY,
-            data TEXT,
-            tipo TEXT,
-            valor REAL,
-            product_id INTEGER,
-            order_id INTEGER,
+            date TEXT,
+            type TEXT,
+            price REAL,
+            product_id INTEGER NULL,
+            order_id INTEGER NULL,
             FOREIGN KEY (product_id) REFERENCES kf_product(id),
             FOREIGN KEY (order_id) REFERENCES kf_order(id)
         );

@@ -21,21 +21,33 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Transaction } from "shared/types/transaction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
+import { useToast } from "@/hooks/use-toast";
 
 const TransactionsPage = () => {
-    const cardInfo: CardInfo[] = calculateCardInfo(fetchTransactions());
+    const [transactions, setTransactios] = useState<Transaction[]>([]);
 
-    const [transactions, setTransactions] = useState<Transaction[]>(() => {
-        return fetchTransactions();
-    });
+    const { toast } = useToast();
 
-    const addTransaction = (newTransaction: Transaction) => {
-        const updatedTransactions = [...transactions, newTransaction];
-        setTransactions(updatedTransactions);
-        localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedTransactions = await fetchTransactions();
+
+            if (fetchedTransactions.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedTransactions.error.message
+                })
+            } else {
+                setTransactios(fetchedTransactions?.success?.data);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const cardInfo: CardInfo[] = calculateCardInfo(transactions);
 
     return (
         <ContentLayout title="Transactions">
@@ -86,7 +98,7 @@ const TransactionsPage = () => {
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewTransactionDialog _onSubmit={addTransaction} />
+                            <NewTransactionDialog />
                         </div>
                     </CardHeader>
 

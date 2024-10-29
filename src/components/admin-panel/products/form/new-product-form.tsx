@@ -50,14 +50,15 @@ const formSchema = z.object({
         .number()
         .gt(0, "Price must be greater than 0."),
     quantity: z
-        .string().refine((val) => !Number.isNaN(parseFloat(val)), {
+        .string()
+        .refine((val) => !Number.isNaN(parseFloat(val)), {
             message: "Expected number, received a string"
         }),
-    image: z
-        .instanceof(File)
-        .refine((file) => file.size !== 0, "Please upload an image"),
     supplierId: z
-        .number({ required_error: "Please select a supplier." })
+        .string({ required_error: "Please select a supplier." })
+        .refine((val) => !Number.isNaN(parseInt(val, 10)), {
+            message: "Expected number, received a string"
+        }),
 });
 
 const NewProductForm = ({
@@ -101,7 +102,7 @@ const NewProductForm = ({
             price: values.price,
             quantity: parseFloat(values.quantity),
             image: "",
-            supplierId: values.supplierId
+            supplierId: parseInt(values.supplierId)
         }
 
         const response = await createProduct(product);
@@ -214,7 +215,7 @@ const NewProductForm = ({
                                             {suppliers && suppliers.map((supplier) =>
                                                 <SelectItem
                                                     key={supplier.id}
-                                                    value={supplier.id ? supplier.id.toString() : ""}
+                                                    value={supplier.id ? supplier.id.toString() : "-1"}
                                                 >
                                                     {supplier.name}
                                                 </SelectItem>

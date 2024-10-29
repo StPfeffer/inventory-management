@@ -1,8 +1,18 @@
-// should fetch from an external API in the future
+import { axiosInstance } from "@/lib/axios";
+import { User } from "shared/types/user";
+
 export class UserService {
 
     list() {
-        return JSON.parse(localStorage.getItem("users") || "[]");
+        return axiosInstance.get("api/users");
+    }
+
+    find(id: number) {
+        return axiosInstance.get("api/users/" + id);
+    }
+
+    save(user: User) {
+        return axiosInstance.post("api/users", user);
     }
 
 }

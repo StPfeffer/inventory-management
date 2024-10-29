@@ -4,7 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Product } from "shared/types/product";
-import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
+import { fetchSupplier } from "@/actions/supplier/fetch-supplier";
+import { useQuery } from '@tanstack/react-query';
+import { Supplier } from "shared/types/supplier";
 
 export const productsColumns: ColumnDef<Product>[] = [
     {
@@ -82,9 +84,7 @@ export const productsColumns: ColumnDef<Product>[] = [
                 currency: "USD",
             }).format(price);
 
-            const color = row.getValue("category") === "income" ? "text-green-600" : "text-red-600";
-
-            return <div className={`text-right font-semibold ` + (color)}>{formatted}</div>
+            return <div className="text-right">{formatted}</div>
         },
     },
     {
@@ -115,7 +115,7 @@ export const productsColumns: ColumnDef<Product>[] = [
         },
     },
     {
-        accessorKey: "supplierId",
+        accessorKey: "supplier_id",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Supplier" sort={false} />
         ),
@@ -123,18 +123,26 @@ export const productsColumns: ColumnDef<Product>[] = [
             label: "Supplier"
         },
         cell: ({ row }) => {
-            const supplierId = row.getValue("supplierId");
+            const supplierId = row.getValue("supplier_id") as string;
 
-            const supplier = fetchSuppliers(supplierId as number);
+            const { isPending, isError, data, error } = useQuery({ queryKey: ["supplier"], queryFn: () => fetchSupplier(supplierId) });
 
-            return (
-                <span>
-                    {supplier ? supplier.name : "N/A"}
-                </span>
-            )
+            if (isPending) {
+                return <span>Loading...</span>
+            }
+
+            if (isError) {
+                return <span>Error: {error.message}</span>
+            }
+
+            if (data.error) {
+                return <span>Not found</span>
+            } else {
+                return <span>{(data?.success?.data as Supplier).name}</span>
+            }
         },
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
+            return value.includes(row.getValue(id));
         },
     },
     {

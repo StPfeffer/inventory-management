@@ -1,5 +1,4 @@
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
-import { DataTable } from "@/components/data-table/data-table";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -21,6 +20,7 @@ import NewProductDialog from "@/components/admin-panel/products/dialog/new-produ
 import { productsColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
 import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
+import { ProductsDataTable } from "@/components/admin-panel/products/data-table/products-data-table";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -86,7 +86,7 @@ const ProductsPage = () => {
                     </CardHeader>
 
                     <CardContent>
-                        <DataTable
+                        <ProductsDataTable
                             columns={productsColumns}
                             data={products}
                             searchPlaceholder="Search products..."

@@ -1,21 +1,18 @@
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogTitle, DialogTrigger, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader } from "@/components/ui/dialog"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import z from 'zod'
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
-    FormMessage,
+    FormLabel
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 import { Customer } from "@/types/customer";
-import { updateCustomer } from "@/services/customer-service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import z from 'zod';
 
 const formSchema = z.object({
     name: z.string()
@@ -34,7 +31,7 @@ const formSchema = z.object({
 
 interface NewCustomerFormProps {
     isOpen: boolean,
-    onOpenChange: (value: boolean)=> void;
+    onOpenChange: (value: boolean) => void;
     customer: Customer | null;
 }
 
@@ -48,7 +45,7 @@ export const NewCustomerForm = ({ isOpen, onOpenChange, customer }: NewCustomerF
         mode: 'onChange'
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         if (customer) {
             form.reset({
                 name: customer.name,
@@ -61,10 +58,10 @@ export const NewCustomerForm = ({ isOpen, onOpenChange, customer }: NewCustomerF
         }
     }, [isOpen, customer])
 
-    const onUpdatedSuccess = (updateCustomer: Customer) => {
-        alert("Customer updated");
-        onOpenChange(false);
-    }
+    // const onUpdatedSuccess = (updateCustomer: Customer) => {
+    //     alert("Customer updated");
+    //     onOpenChange(false);
+    // }
 
     const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (values: z.infer<typeof formSchema>) => {
         console.log(values);

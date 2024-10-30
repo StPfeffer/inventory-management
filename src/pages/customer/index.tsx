@@ -19,7 +19,7 @@ export default function CustomerPage() {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
     
-    const [customer, setCustomer] = useState<Customer[]>([
+    const [customer] = useState<Customer[]>([
         {
             id: 8556,
             name: "Customer 1",

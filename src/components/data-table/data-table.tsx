@@ -18,6 +18,8 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
+const DEFAULT_REACT_TABLE_COLUMN_WIDTH = 150;
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -68,8 +70,10 @@ export function DataTable<TData, TValue>({
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
+                                    const styles: React.CSSProperties = header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH ? {width: `${header.getSize()}px`} : {}  
+
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead key={header.id} colSpan={header.colSpan} style={styles}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(

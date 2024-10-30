@@ -8,8 +8,6 @@ import {
 import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
 import { Row } from "@tanstack/react-table";
-import { TransactionDetailsDialog } from "../admin-panel/dialog/transaction-details-dialog";
-import { Transaction } from "@/types/transaction";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 interface DataTableRowActionsProps<TData> {
@@ -21,8 +19,6 @@ export function DataTableRowActions<TData>({
   row,
   acessorKey
 }: DataTableRowActionsProps<TData>) {
-  const transaction = row.original as Transaction;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +32,7 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <TransactionDetailsDialog transaction={transaction} />
+          {/* <TransactionDetailsDialog transaction={transaction} /> */}
         </DropdownMenuItem>
         <DropdownMenuItem disabled>
           Edit transaction

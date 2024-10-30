@@ -7,6 +7,7 @@ import ExpensesPage from "@/pages/transactions/expenses/page";
 import DashboardPage from "@/pages/dashboard";
 import DashboardLayout from "./admin-layout";
 import TransactionsPage from "@/pages/transactions/transactions/page";
+import CustomerPage from "@/pages/customer";
 
 function CustomRoutes() {
     return (
@@ -18,6 +19,7 @@ function CustomRoutes() {
             <Route path="/transactions" element={<DashboardLayout><TransactionsPage /></DashboardLayout>} />
             <Route path="/transactions/incomes" element={<DashboardLayout><IncomesPage /></DashboardLayout>} />
             <Route path="/transactions/expenses" element={<DashboardLayout><ExpensesPage /></DashboardLayout>} />
+            <Route path="/customers" element={<DashboardLayout><CustomerPage /></DashboardLayout>} />
         </Routes>
     )
 }

@@ -5,9 +5,14 @@ import { Customer } from "@/types/customer";
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import CustomerDataTableRowActions from "./cutomer-data-table-row-actions";
 
-export const CustomerColumns: ColumnDef<Customer>[] = [
+interface CustomerColumnsProps {
+  onEdit: (customer : Customer) => void,
+  onDelete: (customer : Customer) => void
+}
+
+export const CustomerColumns = ({onEdit, onDelete} : CustomerColumnsProps): ColumnDef<Customer>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -43,6 +48,10 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
     header: "Name",
   },
   {
+    accessorKey: "document",
+    header: "Document number",
+  },
+  {
     accessorKey: "contact",
     header: "Contact",
   },
@@ -52,6 +61,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} acessorKey="customerId" />
+    cell: ({ row }) => <CustomerDataTableRowActions row={row} acessorKey="customerId" onEdit={onEdit} onDelete={onDelete} />,
+    size: 50,
   }
 ];

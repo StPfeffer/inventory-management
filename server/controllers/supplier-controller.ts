@@ -10,7 +10,7 @@ import {
     updateSupplier
 } from "server/models/supplier-model";
 
-export const getSuppliers = (req: Request, res: Response) => {
+export const getSuppliers = (_req: Request, res: Response) => {
     const suppliers = getAllSuppliers();
     res.json(suppliers);
 };

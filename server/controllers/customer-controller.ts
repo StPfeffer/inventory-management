@@ -11,7 +11,7 @@ import {
     updateCustomer
 } from "server/models/customer-model";
 
-export const getCustomers = (req: Request, res: Response) => {
+export const getCustomers = (_req: Request, res: Response) => {
     const customers = getAllCustomers();
     res.json(customers);
 };

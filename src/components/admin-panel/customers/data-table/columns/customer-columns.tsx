@@ -7,7 +7,7 @@ import { Customer } from "shared/types/customer";
 
 interface CustomerColumnsProps {
     onEdit: (customer: Customer) => void,
-    onDelete: (customer: Customer, confirmed: boolean) => void
+    onDelete: (customer: Customer) => void
 }
 
 export const customerColumns = ({ onEdit, onDelete }: CustomerColumnsProps): ColumnDef<Customer>[] => [

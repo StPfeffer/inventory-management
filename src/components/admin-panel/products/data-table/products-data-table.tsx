@@ -33,7 +33,7 @@ interface DataTableProps<TData, TValue> {
     searchable?: boolean;
     searchPlaceholder?: string;
     searchColumn?: string;
-    onDelete?: (value: TData, confirmed: boolean) => void;
+    onDelete?: (values: TData[]) => void;
 }
 
 const queryClient = new QueryClient();

@@ -10,7 +10,7 @@ import {
     updateProduct
 } from "server/models/product-model";
 
-export const getProducts = (req: Request, res: Response) => {
+export const getProducts = (_req: Request, res: Response) => {
     const customers = getAllProducts();
     res.json(customers);
 };

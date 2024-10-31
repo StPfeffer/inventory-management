@@ -19,13 +19,12 @@ import {
     DialogTrigger
 } from "../ui/dialog";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
     acessorKey: string;
-    onEdit: (value: TData) => void;
-    onDelete: (value: TData, confirmed: boolean) => void;
+    onEdit?: (value: TData) => void;
+    onDelete?: (value: TData) => void;
 }
 
 export function DataTableRowActions<TData>({
@@ -34,11 +33,8 @@ export function DataTableRowActions<TData>({
     onEdit,
     onDelete
 }: DataTableRowActionsProps<TData>) {
-    const [clicked, setClicked] = useState(false);
-
     const handleDeleteClick = () => {
-        setClicked(true);
-        onDelete(row.original, clicked);
+        onDelete!(row.original);
     };
 
     const navigate = useNavigate();
@@ -60,7 +56,7 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(path)}>
                     View
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                <DropdownMenuItem onClick={() => onEdit ? onEdit!(row.original) : {}}>
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -89,7 +85,7 @@ export function DataTableRowActions<TData>({
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button onClick={handleDeleteClick}>
+                                    <Button onClick={() => onDelete ? handleDeleteClick : {}}>
                                         Delete
                                     </Button>
                                 </DialogClose>

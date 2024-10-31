@@ -1,6 +1,3 @@
-import { fetchExpenses } from "@/actions/transactions/fetch-expenses";
-import { expensesColumns } from "@/components/admin-panel/transactions/data-table/columns/expenses-columns";
-import NewExpenseDialog from "@/components/admin-panel/transactions/dialog/new-expense-dialog";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
 import {
     Breadcrumb,

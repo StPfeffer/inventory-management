@@ -26,12 +26,12 @@ export const getTransactions = (req: Request, res: Response) => {
   res.json(transactions);
 };
 
-export const getExpenses = (req: Request, res: Response) => {
+export const getExpenses = (_req: Request, res: Response) => {
   const expenses = getAllExpenses();
   res.json(expenses);
 };
 
-export const getIncomes = (req: Request, res: Response) => {
+export const getIncomes = (_req: Request, res: Response) => {
   const incomes = getAllIncomes();
   res.json(incomes);
 };

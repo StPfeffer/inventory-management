@@ -16,7 +16,6 @@ import {
     TransactionType
 } from "shared/types/transaction";
 import MoneyInput from "@/components/geral/money-input";
-import { DialogClose } from "@/components/ui/dialog";
 import {
     Popover,
     PopoverContent,

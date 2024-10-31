@@ -14,8 +14,18 @@ import {
 } from "@tanstack/react-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from "@/components/ui/table";
+import {
+    QueryClient,
+    QueryClientProvider
+} from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -23,6 +33,7 @@ interface DataTableProps<TData, TValue> {
     searchable?: boolean;
     searchPlaceholder?: string;
     searchColumn?: string;
+    onDelete?: (value: TData, confirmed: boolean) => void;
 }
 
 const queryClient = new QueryClient();
@@ -32,7 +43,8 @@ export function ProductsDataTable<TData, TValue>({
     data,
     searchable = true,
     searchPlaceholder = "Search...",
-    searchColumn
+    searchColumn,
+    onDelete
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -66,6 +78,7 @@ export function ProductsDataTable<TData, TValue>({
                     searchable={searchable}
                     searchPlaceholder={searchPlaceholder}
                     searchColumn={searchColumn}
+                    onDelete={onDelete}
                 />
 
                 <div className="rounded-md border">

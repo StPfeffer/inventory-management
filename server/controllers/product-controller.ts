@@ -1,14 +1,14 @@
 import {
     Request,
     Response
-} from 'express';
+} from "express";
 import {
     addProduct,
     deleteProduct,
     getAllProducts,
     getProductById,
     updateProduct
-} from 'server/models/product-model';
+} from "server/models/product-model";
 
 export const getProducts = (req: Request, res: Response) => {
     const customers = getAllProducts();
@@ -21,7 +21,7 @@ export const getProduct = (req: Request, res: Response) => {
     if (product) {
         res.json(product);
     } else {
-        res.status(404).json({ error: 'Product not found' });
+        res.status(404).json({ error: "Product not found" });
     }
 };
 

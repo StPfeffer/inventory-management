@@ -1,14 +1,15 @@
 import {
     Request,
     Response
-} from 'express';
+} from "express";
 import {
     addCustomer,
     deleteCustomer,
+    batchDeleteCustomer,
     getAllCustomers,
     getCustomerById,
     updateCustomer
-} from 'server/models/customer-model';
+} from "server/models/customer-model";
 
 export const getCustomers = (req: Request, res: Response) => {
     const customers = getAllCustomers();
@@ -21,7 +22,7 @@ export const getCustomer = (req: Request, res: Response) => {
     if (customer) {
         res.json(customer);
     } else {
-        res.status(404).json({ error: 'Customer not found' });
+        res.status(404).json({ error: "Customer not found" });
     }
 };
 
@@ -41,5 +42,11 @@ export const editCustomer = (req: Request, res: Response) => {
 export const removeCustomer = (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
     deleteCustomer(id);
+    res.status(204).send();
+};
+
+export const batchRemoveCustomer = (req: Request, res: Response) => {
+    const ids = req.body;
+    batchDeleteCustomer(ids);
     res.status(204).send();
 };

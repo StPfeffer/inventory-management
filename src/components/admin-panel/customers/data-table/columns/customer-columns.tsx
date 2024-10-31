@@ -5,7 +5,12 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Customer } from "shared/types/customer";
 
-export const customerColumns: ColumnDef<Customer>[] = [
+interface CustomerColumnsProps {
+    onEdit: (customer: Customer) => void,
+    onDelete: (customer: Customer, confirmed: boolean) => void
+}
+
+export const customerColumns = ({ onEdit, onDelete }: CustomerColumnsProps): ColumnDef<Customer>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -77,6 +82,6 @@ export const customerColumns: ColumnDef<Customer>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" />
+        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" onEdit={onEdit} onDelete={onDelete} />
     }
 ];

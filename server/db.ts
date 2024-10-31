@@ -8,7 +8,7 @@ function openDb(filename: string): Database {
     return db;
 }
 
-const db = openDb('inventory.db');
+const db = openDb("inventory.db");
 
 try {
     db.exec(`
@@ -77,7 +77,7 @@ try {
         );
     `);
 } catch (error) {
-    console.error('Error creating tables:', error);
+    console.error("Error creating tables:", error);
 }
 
 export default db;

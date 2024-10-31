@@ -32,6 +32,7 @@ interface DataTableProps<TData, TValue> {
     searchable?: boolean;
     searchPlaceholder?: string;
     searchColumn?: string;
+    onDelete?: (values: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,7 +40,8 @@ export function DataTable<TData, TValue>({
     data,
     searchable = true,
     searchPlaceholder = "Search...",
-    searchColumn
+    searchColumn,
+    onDelete
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -72,6 +74,7 @@ export function DataTable<TData, TValue>({
                 searchable={searchable}
                 searchPlaceholder={searchPlaceholder}
                 searchColumn={searchColumn}
+                onDelete={onDelete}
             />
 
             <div className="rounded-md border">
@@ -80,7 +83,9 @@ export function DataTable<TData, TValue>({
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
-                                    const styles: React.CSSProperties = header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH ? {width: `${header.getSize()}px`} : {}  
+                                    const styles: React.CSSProperties = header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH
+                                        ? { width: `${header.getSize()}px` }
+                                        : {};
 
                                     return (
                                         <TableHead key={header.id} colSpan={header.colSpan} style={styles}>
@@ -91,7 +96,7 @@ export function DataTable<TData, TValue>({
                                                     header.getContext()
                                                 )}
                                         </TableHead>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}

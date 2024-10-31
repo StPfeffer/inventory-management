@@ -1,7 +1,7 @@
 import {
   Request,
   Response
-} from 'express';
+} from "express";
 import {
   addTransaction,
   deleteTransaction,
@@ -42,7 +42,7 @@ export const getTransaction = (req: Request, res: Response) => {
   if (transaction) {
     res.json(transaction);
   } else {
-    res.status(404).json({ error: 'Transaction not found' });
+    res.status(404).json({ error: "Transaction not found" });
   }
 };
 

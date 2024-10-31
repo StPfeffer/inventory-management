@@ -1,7 +1,7 @@
 import {
     Request,
     Response
-} from 'express';
+} from "express";
 import {
     addSupplier,
     deleteSupplier,
@@ -21,7 +21,7 @@ export const getSupplier = (req: Request, res: Response) => {
     if (supplier) {
         res.json(supplier);
     } else {
-        res.status(404).json({ error: 'Supplier not found' });
+        res.status(404).json({ error: "Supplier not found" });
     }
 };
 

@@ -19,16 +19,27 @@ import {
     DialogTrigger
 } from "../ui/dialog";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
-    row: Row<TData>,
+    row: Row<TData>;
     acessorKey: string;
+    onEdit: (value: TData) => void;
+    onDelete: (value: TData, confirmed: boolean) => void;
 }
 
 export function DataTableRowActions<TData>({
     row,
-    acessorKey
+    acessorKey,
+    onEdit,
+    onDelete
 }: DataTableRowActionsProps<TData>) {
+    const [clicked, setClicked] = useState(false);
+
+    const handleDeleteClick = () => {
+        setClicked(true);
+        onDelete(row.original, clicked);
+    };
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -49,7 +60,7 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(path)}>
                     View
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem onClick={() => onEdit(row.original)}>
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -78,7 +89,7 @@ export function DataTableRowActions<TData>({
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button>
+                                    <Button onClick={handleDeleteClick}>
                                         Delete
                                     </Button>
                                 </DialogClose>

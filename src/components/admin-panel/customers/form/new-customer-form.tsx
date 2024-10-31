@@ -16,43 +16,73 @@ import { createCustomer } from "@/actions/customer/create-customer";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { updateCustomer } from "@/actions/customer/update-customer";
 
 const formSchema = z.object({
     name: z
         .string({ required_error: "Please enter a name.", })
-        .min(5, "Name must contain at least 5 characters."),
+        .min(5, "Name must contain at least 5 characters.")
+        .max(50, { message: 'Name should be shorter than 50 characteres.' }),
     document: z
         .string({ required_error: "Please enter a document.", })
-        .min(10, "Description must contain at least 10 characters."),
+        .min(10, "Description must contain at least 10 characters.")
+        .max(25, { message: 'Document should be shorter than 25 characteres.' }),
     contact: z
         .string({ required_error: "Please enter a valid contact info." })
-        .min(8, "Contact must be at least 8 characters."),
+        .min(8, "Contact must be at least 8 characters.")
+        .max(20, { message: 'Contact should be shorter than 20 characteres.' }),
     address: z
         .string({ required_error: "Please enter a valid address." })
         .min(10, "Adress must be at least 10 characters.")
+        .max(100, { message: 'Address should be shorter than 100 characteres.' })
 });
 
+interface NewCustomerFormProps {
+    _onSubmit: () => void;
+    customer: Customer | null;
+}
+
 const NewCustomerForm = ({
-    _onSubmit
-}: {
-    _onSubmit: () => void
-}) => {
+    _onSubmit,
+    customer
+}: NewCustomerFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
+        mode: 'onChange'
     });
 
     const { toast } = useToast();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (customer) {
+            form.reset({
+                name: customer.name,
+                address: customer.address,
+                contact: customer.contact,
+                document: customer.document,
+            });
+        } else {
+            form.reset();
+        }
+    }, [customer]);
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const customer: Customer = {
+        const customerInfo: Customer = {
             name: values.name,
             document: values.document,
             contact: values.contact,
             address: values.address,
         }
 
-        const response = await createCustomer(customer);
+        let response;
+
+        if (customer) {
+            response = await updateCustomer(customer.id!, customerInfo);
+        } else {
+            response = await createCustomer(customerInfo);
+        }
 
         if (response.error) {
             toast({
@@ -146,7 +176,9 @@ const NewCustomerForm = ({
                 />
 
                 <div className="flex justify-end">
-                    <Button type="submit">Create</Button>
+                    <Button type="submit">
+                        {customer ? "Update" : "Create"}
+                    </Button>
                 </div>
             </form>
         </Form >

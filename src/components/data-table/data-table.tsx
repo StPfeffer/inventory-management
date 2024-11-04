@@ -11,30 +11,39 @@ import {
     getSortedRowModel,
     SortingState,
     useReactTable,
-    VisibilityState,
 } from "@tanstack/react-table";
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from "../ui/table";
 
 const DEFAULT_REACT_TABLE_COLUMN_WIDTH = 150;
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: TData[],
+    searchable?: boolean;
+    searchPlaceholder?: string;
+    searchColumn?: string;
+    onDelete?: (values: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    searchable = true,
+    searchPlaceholder = "Search...",
+    searchColumn,
+    onDelete
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        transactionId: false,
-        recurring: false,
-        cardBrand: false,
-    });
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -43,7 +52,6 @@ export function DataTable<TData, TValue>({
         columns,
         state: {
             sorting,
-            columnVisibility,
             rowSelection,
             columnFilters,
         },
@@ -51,7 +59,6 @@ export function DataTable<TData, TValue>({
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
-        onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -62,7 +69,13 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} />
+            <DataTableToolbar
+                table={table}
+                searchable={searchable}
+                searchPlaceholder={searchPlaceholder}
+                searchColumn={searchColumn}
+                onDelete={onDelete}
+            />
 
             <div className="rounded-md border">
                 <Table>
@@ -70,7 +83,9 @@ export function DataTable<TData, TValue>({
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
-                                    const styles: React.CSSProperties = header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH ? {width: `${header.getSize()}px`} : {}  
+                                    const styles: React.CSSProperties = header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH
+                                        ? { width: `${header.getSize()}px` }
+                                        : {};
 
                                     return (
                                         <TableHead key={header.id} colSpan={header.colSpan} style={styles}>
@@ -81,7 +96,7 @@ export function DataTable<TData, TValue>({
                                                     header.getContext()
                                                 )}
                                         </TableHead>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}

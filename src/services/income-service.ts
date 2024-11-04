@@ -1,38 +1,22 @@
-"use client";
+import { axiosInstance } from "@/lib/axios";
+import { Transaction } from "shared/types/transaction";
 
-import { transactions } from "@/db/dummy/transactions";
-import { isIncome } from "@/lib/utils";
-import { Income } from "@/types/transaction";
-
-// should fetch from an external API in the future
 export class IncomeService {
 
-  findById(id: number): Income | null {
-    const income = this.list().filter(transaction => transaction.id === id).at(0);
-    return income === undefined ? null : income;
-  }
+    list() {
+        return axiosInstance.get("api/transactions?type=entry");
+    }
 
-  list(): Income[] {
-    return JSON.parse(localStorage.getItem("incomes") || "[]");
-  }
+    listRecents() {
+        return axiosInstance.get("api/transactions/recents?type=entry");
+    }
 
-  listByUser(userId: number): Income[] {
-    return this.list().filter(t => t.userId === userId);
-  }
+    find(id: number) {
+        return axiosInstance.get("api/transactions/" + id + "?type=entry");
+    }
 
-  initialize(userId: number): void {
-    loadDataToLocalStorage("incomes", transactions.filter(t => t.userId === userId).filter(isIncome));
-  }
+    save(transaction: Transaction) {
+        return axiosInstance.post("api/transactions", transaction);
+    }
 
-}
-
-export const loadDataToLocalStorage = (key: string, data: Income[]) => {
-  const existingData = localStorage.getItem(key);
-
-  if (!existingData) {
-    localStorage.setItem(key, JSON.stringify(data));
-    return true;
-  }
-
-  return false;
 }

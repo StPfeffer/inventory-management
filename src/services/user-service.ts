@@ -1,22 +1,18 @@
-"use client";
+import { axiosInstance } from "@/lib/axios";
+import { User } from "shared/types/user";
 
-import { users } from "@/db/dummy/data";
-import { User } from "@/types/user";
-
-// should fetch from an external API in the future
 export class UserService {
 
-  findById(id: number): User | null {
-    const expense = this.list().filter(e => e.id === id).at(0);
-    return expense === undefined ? null : expense;
-  }
+    list() {
+        return axiosInstance.get("api/users");
+    }
 
-  list(): User[] {
-    return JSON.parse(localStorage.getItem("users") || "[]");
-  }
+    find(id: number) {
+        return axiosInstance.get("api/users/" + id);
+    }
 
-  initialize(): User[] {
-    return users;
-  }
+    save(user: User) {
+        return axiosInstance.post("api/users", user);
+    }
 
 }

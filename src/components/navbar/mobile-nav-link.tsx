@@ -1,4 +1,8 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger
+} from "@/components/ui/sheet";
 
 import { getNavLinks } from "@/lib/nav-links";
 import MountainIcon from "@/components/icon/mountain.tsx";
@@ -36,7 +40,7 @@ const MobileNavLinks = () => {
                 </div>
             </SheetContent>
         </Sheet>
-    )
+    );
 }
 
 export default MobileNavLinks;

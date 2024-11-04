@@ -3,13 +3,22 @@ import {
     CreditCard,
     LayoutGrid,
     LucideIcon,
-    ChartColumn
+    ChartColumn,
+    PackageSearch,
+    TrendingUp,
+    TrendingDown,
+    Package,
+    ShoppingCart,
+    Store,
+    Users,
+    UserRound
 } from "lucide-react";
 
 type Submenu = {
     href: string;
     label: string;
     active: boolean;
+    icon?: LucideIcon;
 };
 
 type Menu = {
@@ -17,7 +26,7 @@ type Menu = {
     label: string;
     active: boolean;
     disabled: boolean;
-    icon: LucideIcon
+    icon: LucideIcon;
     submenus: Submenu[];
 };
 
@@ -54,8 +63,45 @@ export function getMenuList(pathname: string): Group[] {
             menus: [
                 {
                     href: "",
+                    label: "Inventory",
+                    active: pathname.includes("/inventory"),
+                    disabled: false,
+                    icon: PackageSearch,
+                    submenus: [
+                        {
+                            href: "/inventory/products",
+                            label: "Products",
+                            active: pathname.includes("/inventory/products"),
+                            icon: ShoppingCart
+                        },
+                        {
+                            href: "/inventory/suppliers",
+                            label: "Suppliers",
+                            active: pathname.includes("/inventory/suppliers"),
+                            icon: Package
+                        }
+                    ]
+                },
+                {
+                    href: "/orders",
+                    label: "Orders",
+                    active: pathname.includes("/orders"),
+                    disabled: false,
+                    icon: Store,
+                    submenus: []
+                },
+                {
+                    href: "/customers",
+                    label: "Customers",
+                    active: pathname.includes("/customers"),
+                    disabled: false,
+                    icon: UserRound,
+                    submenus: []
+                },
+                {
+                    href: "",
                     label: "Transactions",
-                    active: pathname.includes("/posts"),
+                    active: pathname.includes("/transactions"),
                     disabled: false,
                     icon: CreditCard,
                     submenus: [
@@ -68,23 +114,33 @@ export function getMenuList(pathname: string): Group[] {
                             href: "/transactions/incomes",
                             label: "Incomes",
                             active: pathname.includes("/transactions/incomes"),
+                            icon: TrendingUp
                         },
                         {
                             href: "/transactions/expenses",
                             label: "Expenses",
                             active: pathname.includes("/transactions/expenses"),
+                            icon: TrendingDown
                         }
                     ]
-                }
+                },
+                {
+                    href: "/users",
+                    label: "Users",
+                    active: pathname.includes("/users"),
+                    disabled: false,
+                    icon: Users,
+                    submenus: []
+                },
             ]
         },
         {
             groupLabel: "Settings",
             menus: [
                 {
-                    href: "/account",
+                    href: "/settings/account",
                     label: "Account",
-                    active: pathname.includes("/account"),
+                    active: pathname.includes("/settings/account"),
                     disabled: false,
                     icon: Settings,
                     submenus: []

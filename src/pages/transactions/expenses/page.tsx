@@ -1,10 +1,7 @@
-import { fetchExpenses } from "@/actions/fetch-expenses";
-import { fetchTransactions } from "@/actions/fetch-transaction";
-import { expensesColumns } from "@/components/admin-panel/dashboard/transactions/expenses-columns";
-import { ExpensesDataTable } from "@/components/admin-panel/data-table/expenses-data-table";
-import NewExpenseDialog from "@/components/admin-panel/dialog/new-expense-dialog";
+import { fetchExpenses } from "@/actions/transactions/fetch-expenses";
+import { expensesColumns } from "@/components/admin-panel/transactions/data-table/columns/expenses-columns";
+import NewExpenseDialog from "@/components/admin-panel/transactions/dialog/new-expense-dialog";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
-import { useAuth } from "@/components/auth/auth-context-provider";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -13,30 +10,39 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Expense, Transaction } from "@/types/transaction";
-import { useState } from "react";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
+import { Transaction } from "shared/types/transaction";
+import { useEffect, useState } from "react";
+import { DataTable } from "@/components/data-table/data-table";
+import { useToast } from "@/hooks/use-toast";
 
 const ExpensesPage = () => {
-    const { user } = useAuth();
+    const [expenses, setExpenses] = useState<Transaction[]>([]);
 
-    const [expenses, setExpenses] = useState<Expense[]>(() => {
-        return fetchExpenses(user!.id);
-    });
+    const { toast } = useToast();
 
-    const [transactions, setTransactions] = useState<Transaction[]>(() => {
-        return fetchTransactions(user!.id);
-    })
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedExpenses = await fetchExpenses();
 
-    const addExpense = (newExpenseTransaction: Expense) => {
-        const updatedExpenses = [...expenses, newExpenseTransaction];
-        setExpenses(updatedExpenses);
-        localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+            if (fetchedExpenses.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedExpenses.error.message
+                })
+            } else {
+                setExpenses(fetchedExpenses?.success?.data);
+            }
+        };
 
-        const updatedTransactions = [...transactions, newExpenseTransaction];
-        setTransactions(updatedTransactions);
-        localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
-    };
+        fetchData();
+    }, []);
 
     return (
         <ContentLayout title="Expenses">
@@ -53,8 +59,8 @@ const ExpensesPage = () => {
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbLink asChild>
-                                <a href="/dashboard">
-                                    Dashboard
+                                <a href="/transactions">
+                                    Transactions
                                 </a>
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -81,12 +87,16 @@ const ExpensesPage = () => {
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewExpenseDialog _onSubmit={addExpense} />
+                            <NewExpenseDialog />
                         </div>
                     </CardHeader>
 
                     <CardContent>
-                        <ExpensesDataTable columns={expensesColumns} data={expenses} />
+                        <DataTable
+                            columns={expensesColumns}
+                            data={expenses}
+                            searchPlaceholder="Search expenses..."
+                        />
                     </CardContent>
                 </Card>
             </main>

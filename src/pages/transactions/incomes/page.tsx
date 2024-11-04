@@ -1,10 +1,4 @@
-import { fetchIncomes } from "@/actions/fetch-incomes";
-import { fetchTransactions } from "@/actions/fetch-transaction";
-import { incomesColumns } from "@/components/admin-panel/dashboard/transactions/incomes-columns";
-import { IncomesDataTable } from "@/components/admin-panel/data-table/incomes-data-table";
-import NewIncomeDialog from "@/components/admin-panel/dialog/new-income-dialog";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
-import { useAuth } from "@/components/auth/auth-context-provider";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -20,29 +14,35 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Income, Transaction } from "@/types/transaction";
-import { useState } from "react";
+import { Transaction } from "shared/types/transaction";
+import { useEffect, useState } from "react";
+import { DataTable } from "@/components/data-table/data-table";
+import { useToast } from "@/hooks/use-toast";
+import { fetchIncomes } from "@/actions/transactions/fetch-incomes";
+import { incomesColumns } from "@/components/admin-panel/transactions/data-table/columns/incomes-columns";
+import NewIncomeDialog from "@/components/admin-panel/transactions/dialog/new-income-dialog";
 
 const IncomesPage = () => {
-    const { user } = useAuth();
+    const [incomes, setIncomes] = useState<Transaction[]>([]);
 
-    const [incomes, setIncomes] = useState<Income[]>(() => {
-        return fetchIncomes(user!.id);
-    });
+    const { toast } = useToast();
 
-    const [transactions, setTransactions] = useState<Transaction[]>(() => {
-        return fetchTransactions(user!.id);
-    })
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedIncomes = await fetchIncomes();
 
-    const addIncome = (newIncomeTransaction: Income) => {
-        const updatedIncomes = [...incomes, newIncomeTransaction];
-        setIncomes(updatedIncomes);
-        localStorage.setItem("incomes", JSON.stringify(updatedIncomes));
+            if (fetchedIncomes.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedIncomes.error.message
+                })
+            } else {
+                setIncomes(fetchedIncomes?.success?.data);
+            }
+        };
 
-        const updatedTransactions = [...transactions, newIncomeTransaction];
-        setTransactions(updatedTransactions);
-        localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
-    };
+        fetchData();
+    }, []);
 
     return (
         <ContentLayout title="Incomes">
@@ -59,8 +59,8 @@ const IncomesPage = () => {
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbLink asChild>
-                                <a href="/dashboard">
-                                    Dashboard
+                                <a href="/transactions">
+                                    Transactions
                                 </a>
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -87,12 +87,16 @@ const IncomesPage = () => {
                         </div>
 
                         <div className="ml-auto gap-1">
-                            <NewIncomeDialog _onSubmit={addIncome} />
+                            <NewIncomeDialog />
                         </div>
                     </CardHeader>
 
                     <CardContent>
-                        <IncomesDataTable columns={incomesColumns} data={incomes} />
+                        <DataTable
+                            columns={incomesColumns}
+                            data={incomes}
+                            searchPlaceholder="Search incomes..."
+                        />
                     </CardContent>
                 </Card>
             </main>

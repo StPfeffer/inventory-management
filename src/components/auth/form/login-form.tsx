@@ -21,15 +21,15 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { User } from "@/types/user";
+import { User } from "shared/types/user";
 
 const formSchema = z.object({
-    username: z
+    email: z
         .string({
-            required_error: "Please provide a valid username.",
+            required_error: "Please provide a valid email.",
         })
-        .min(5, "Your username must be at least 5 characters long to be valid.")
-        .max(25, "Your username cannot exceed 25 characters."),
+        .min(5, "Your email must be at least 10 characters long to be valid.")
+        .max(25, "Your email cannot exceed 25 characters."),
     password: z
         .string({
             required_error: "Please enter your password to continue.",
@@ -42,7 +42,7 @@ export function LoginForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            email: "",
             password: ""
         }
     });
@@ -50,7 +50,6 @@ export function LoginForm() {
     const adminUser: User = {
         id: 1,
         name: "Admin",
-        username: "admin",
         email: "admin@admin.com",
         password: "admin",
     }
@@ -58,16 +57,16 @@ export function LoginForm() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         const existingUsers: User[] = JSON.parse(localStorage.getItem("users") || "[]");
 
-        const username = values.username;
+        const email = values.email;
 
-        if (username === "admin") {
+        if (email === "admin@admin.com") {
             login({ ...adminUser });
         }
 
-        const user = existingUsers.find(u => u.username === username);
+        const user = existingUsers.find(u => u.email === email);
 
         if (!user) {
-            form.setError("username", { type: "manual", message: "Username not found. Please try again." });
+            form.setError("email", { type: "manual", message: "Email not found. Please try again." });
             return;
         }
 
@@ -92,10 +91,10 @@ export function LoginForm() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Email</FormLabel>
 
                                     <FormControl>
                                         <Input {...field} />

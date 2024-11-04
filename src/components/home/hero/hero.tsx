@@ -1,4 +1,7 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import {
+    Button,
+    buttonVariants
+} from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { HeroCards } from "./hero-cards";
 
@@ -21,11 +24,11 @@ export const Hero = () => {
                 </p>
 
                 <div className="space-y-4 md:space-y-0 md:space-x-4">
-                    <Button className="w-full md:w-1/3 cursor-pointer">
+                    <Button className="w-full md:w-1/3 cursor-pointer" type="button">
                         <a
                             rel="noreferrer noopener"
                             href="/dashboard"
-                            className="w-full md:w-1/3"
+                            className="w-full"
                         >
                             Get Started
                         </a>
@@ -40,7 +43,8 @@ export const Hero = () => {
                         })}`}
                     >
                         Github Repository
-                        <GitHubLogoIcon className="relative ml-2 w-5 h-5" />
+
+                        <GitHubLogoIcon className="lg:hidden xl:relative relative ml-2 w-5 h-5" />
                     </a>
                 </div>
             </div>

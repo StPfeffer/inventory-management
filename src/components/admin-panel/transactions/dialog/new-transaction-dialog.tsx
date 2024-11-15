@@ -6,7 +6,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import NewTransactionForm from "../form/new-transaction-form";
-import { useState } from "react";
 import { Transaction } from "shared/types/transaction";
 
 interface NewTransactionDialogProps {
@@ -20,8 +19,6 @@ const NewTransactionDialog = ({
     onOpenChange,
     transaction
 }: NewTransactionDialogProps) => {
-    const [open, setOpen] = useState(false);
-
     return (
         <Dialog
             modal
@@ -44,7 +41,7 @@ const NewTransactionDialog = ({
 
                 <NewTransactionForm
                     transaction={transaction}
-                    _onSubmit={() => { setOpen(false) }}
+                    _onSubmit={() => { onOpenChange(false) }}
                 />
             </DialogContent>
         </Dialog >

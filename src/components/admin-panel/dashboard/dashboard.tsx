@@ -14,7 +14,7 @@ import { Transaction } from "shared/types/transaction";
 import { CardInfo } from "../transactions/dashboard/card/types";
 import { DashboardPieChart } from "./chart/pie-chart";
 import { DashboardRadarChart } from "./chart/radar-chart";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { batchDeleteTransaction, deleteTransaction } from "@/actions/transactions/delete-transaction";
 import { useToast } from "@/hooks/use-toast";
 
@@ -61,7 +61,7 @@ const Dashboard = ({
         }
     }, []);
 
-    const onEdit = useCallback((transaction: Transaction) => {
+    const onEdit = useCallback((_transaction: Transaction) => {
     }, []);
 
     return (
@@ -103,6 +103,7 @@ const Dashboard = ({
                     <DataTable
                         columns={transactionColumns({ onEdit, onDelete })}
                         data={transactions}
+                        onDelete={onBatchDelete}
                     />
                 </CardContent>
             </Card>

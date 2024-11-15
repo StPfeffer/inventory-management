@@ -4,14 +4,14 @@ import { Transaction } from "shared/types/transaction";
 
 const transactionService = new TransactionService();
 
-export const createTransaction = async (transaction: Transaction): Promise<ActionResponse> => {
+export const updateTransaction = async (id: number, transaction: Transaction): Promise<ActionResponse> => {
     try {
-        const createdTransaction = await transactionService.save(transaction);
+        const updatedTransaction = await transactionService.update(id, transaction);
 
         return {
             success: {
-                message: "Transaction has been created.",
-                data: createdTransaction.data as Transaction
+                message: "Transaction has been updated.",
+                data: updatedTransaction.data as Transaction
             }
         };
     } catch (error: any) {
@@ -19,7 +19,7 @@ export const createTransaction = async (transaction: Transaction): Promise<Actio
 
         return {
             error: {
-                message: "An error occurred when trying to create the transaction, please try again later",
+                message: "An error occurred when trying to update the transaction, please try again later",
                 data: []
             }
         };

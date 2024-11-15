@@ -15,7 +15,7 @@ export const fetchProducts = async (): Promise<ActionResponse> => {
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {
@@ -37,7 +37,7 @@ export const fetchProduct = async (productId: string): Promise<ActionResponse> =
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

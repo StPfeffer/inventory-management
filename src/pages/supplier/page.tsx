@@ -21,6 +21,8 @@ import { Supplier } from "shared/types/supplier";
 import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
 import NewSupplierDialog from "@/components/admin-panel/suppliers/dialog/new-supplier-dialog";
 import { supplierColumns } from "@/components/admin-panel/suppliers/data-table/columns/supplier-columns";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 const SuppliersPage = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -45,7 +47,7 @@ const SuppliersPage = () => {
     }, []);
 
     return (
-        <ContentLayout title="Products">
+        <ContentLayout title="Suppliers">
             <div className="flex w-full justify-between">
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -53,6 +55,14 @@ const SuppliersPage = () => {
                             <BreadcrumbLink asChild>
                                 <a href="/">
                                     Home
+                                </a>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <a href="/inventory">
+                                    Inventory
                                 </a>
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -80,7 +90,14 @@ const SuppliersPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
                             <NewSupplierDialog />
                         </div>
                     </CardHeader>

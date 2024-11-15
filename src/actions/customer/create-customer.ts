@@ -15,7 +15,7 @@ export const createCustomer = async (customer: Customer): Promise<ActionResponse
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

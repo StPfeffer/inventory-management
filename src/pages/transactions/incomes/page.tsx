@@ -21,6 +21,8 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchIncomes } from "@/actions/transactions/fetch-incomes";
 import { incomesColumns } from "@/components/admin-panel/transactions/data-table/columns/incomes-columns";
 import NewIncomeDialog from "@/components/admin-panel/transactions/dialog/new-income-dialog";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 const IncomesPage = () => {
     const [incomes, setIncomes] = useState<Transaction[]>([]);
@@ -86,7 +88,14 @@ const IncomesPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
                             <NewIncomeDialog />
                         </div>
                     </CardHeader>

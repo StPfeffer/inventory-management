@@ -23,13 +23,7 @@ import {
     DropdownMenuContent,
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-
-type Submenu = {
-    href: string;
-    label: string;
-    active: boolean;
-    icon?: LucideIcon;
-};
+import { Submenu } from "@/lib/menu-list";
 
 interface CollapseMenuButtonProps {
     icon: LucideIcon;
@@ -96,14 +90,17 @@ export function CollapseMenuButton({
                 </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-                {submenus.map(({ href, label, active, icon: Icon2 }, index) => (
+                {submenus.map(({ href, label, active, icon: Icon2, disabled }, index) => (
                     <Button
                         key={index}
                         variant={active ? "secondary" : "ghost"}
-                        className="w-full justify-start h-10 mb-1"
+                        className={cn(
+                            "w-full justify-start h-10 mb-1",
+                            disabled ? "text-gray-300 dark:text-zinc-700" : ""
+                        )}
                         asChild
                     >
-                        <a href={href}>
+                        <a href={href} className={disabled ? "pointer-events-none" : ""}>
                             {Icon2 ? (
                                 <span className="mr-4 ml-2">
                                     <Icon2 size={16} />

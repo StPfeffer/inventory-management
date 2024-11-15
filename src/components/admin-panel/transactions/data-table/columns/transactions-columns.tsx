@@ -8,7 +8,15 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { formatDate } from "date-fns";
 
-export const transactionColumns: ColumnDef<Transaction>[] = [
+interface TransactionColumnsProps {
+    onEdit: (transaction: Transaction) => void,
+    onDelete: (transaction: Transaction) => void
+}
+
+export const transactionColumns = ({
+    onEdit,
+    onDelete
+}: TransactionColumnsProps): ColumnDef<Transaction>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -100,6 +108,6 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" />
+        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" onEdit={onEdit} onDelete={onDelete} />
     }
 ];

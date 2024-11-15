@@ -21,6 +21,8 @@ import { Transaction } from "shared/types/transaction";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 const ExpensesPage = () => {
     const [expenses, setExpenses] = useState<Transaction[]>([]);
@@ -86,7 +88,14 @@ const ExpensesPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
                             <NewExpenseDialog />
                         </div>
                     </CardHeader>

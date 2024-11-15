@@ -10,7 +10,7 @@ import { Input } from "../ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { moneyFormatters } from "@/lib/money-formatter";
 
-type TextInputProps = {
+type MoneyInputProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     form: UseFormReturn<any>;
     name: string;
@@ -20,47 +20,42 @@ type TextInputProps = {
 
 const moneyFormatter = moneyFormatters.en_US;
 
-export default function MoneyInput(props: TextInputProps) {
-    const initialValue = props.form.getValues()[props.name]
-        ? moneyFormatter.format(props.form.getValues()[props.name])
+export default function MoneyInput({ form, name, label, placeholder }: MoneyInputProps) {
+    const initialValue = form.getValues()[name]
+        ? moneyFormatter.format(Number(form.getValues()[name]) || 0)
         : "";
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [value, setValue] = useReducer((_: any, next: string) => {
+    const [value, setValue] = useReducer((_: string, next: string) => {
         const digits = next.replace(/\D/g, "");
         return moneyFormatter.format(Number(digits) / 100);
     }, initialValue);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    function handleChange(realChangeFn: Function, formattedValue: string) {
+    function handleChange(onChange: (value: number) => void, formattedValue: string) {
         const digits = formattedValue.replace(/\D/g, "");
-        const realValue = Number(digits) / 100;
-        realChangeFn(realValue);
+        const numericValue = Number(digits) / 100;
+        onChange(numericValue);
     }
 
     return (
         <FormField
-            control={props.form.control}
-            name={props.name}
+            control={form.control}
+            name={name}
             render={({ field }) => {
-                field.value = value;
-                const _change = field.onChange;
+                const { onChange, value: fieldValue } = field;
 
                 return (
                     <FormItem className="w-full">
-                        <FormLabel>
-                            {props.label}
-                        </FormLabel>
+                        <FormLabel>{label}</FormLabel>
                         <FormControl>
                             <Input
-                                placeholder={props.placeholder}
+                                placeholder={placeholder}
                                 type="text"
-                                {...field}
+                                value={value || moneyFormatter.format(Number(fieldValue) || 0)}
                                 onChange={(ev) => {
-                                    setValue(ev.target.value);
-                                    handleChange(_change, ev.target.value);
+                                    const inputValue = ev.target.value;
+                                    setValue(inputValue);
+                                    handleChange(onChange, inputValue);
                                 }}
-                                value={value}
                             />
                         </FormControl>
                         <FormMessage />

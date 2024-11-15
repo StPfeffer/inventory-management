@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
                 table={table}
                 searchable={searchable}
                 searchPlaceholder={searchPlaceholder}
-                searchColumn={searchColumn}
+                searchColumns={searchColumn}
                 onDelete={onDelete}
             />
 

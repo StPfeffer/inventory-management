@@ -21,6 +21,8 @@ import { productsColumns } from "@/components/admin-panel/products/data-table/co
 import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
 import { ProductsDataTable } from "@/components/admin-panel/products/data-table/products-data-table";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -47,12 +49,20 @@ const ProductsPage = () => {
     return (
         <ContentLayout title="Products">
             <div className="flex w-full justify-between">
-                <Breadcrumb>
+            <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink asChild>
                                 <a href="/">
                                     Home
+                                </a>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <a href="/inventory">
+                                    Inventory
                                 </a>
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -80,7 +90,14 @@ const ProductsPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
                             <NewProductDialog />
                         </div>
                     </CardHeader>

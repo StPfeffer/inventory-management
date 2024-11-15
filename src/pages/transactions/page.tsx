@@ -2,7 +2,6 @@ import { fetchTransactions } from "@/actions/transactions/fetch-transaction";
 import CardTotal from "@/components/admin-panel/transactions/dashboard/card/card-total";
 import { calculateCardInfo } from "@/components/admin-panel/transactions/dashboard/card/helper";
 import { CardInfo } from "@/components/admin-panel/transactions/dashboard/card/types";
-import { transactionColumns } from "@/components/admin-panel/transactions/data-table/columns/transactions-columns"
 import NewTransactionDialog from "@/components/admin-panel/transactions/dialog/new-transaction-dialog";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
 import {
@@ -21,30 +20,73 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Transaction } from "shared/types/transaction";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
+import { batchDeleteTransaction, deleteTransaction } from "@/actions/transactions/delete-transaction";
+import { transactionColumns } from "@/components/admin-panel/transactions/data-table/columns/transactions-columns";
 
 const TransactionsPage = () => {
-    const [transactions, setTransactios] = useState<Transaction[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
 
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchData = async () => {
-            const fetchedTransactions = await fetchTransactions();
-
-            if (fetchedTransactions.error) {
-                toast({
-                    title: "Error",
-                    description: fetchedTransactions.error.message
-                })
-            } else {
-                setTransactios(fetchedTransactions?.success?.data);
-            }
-        };
-
         fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        const fetchedTransactions = await fetchTransactions();
+
+        if (fetchedTransactions.error) {
+            toast({
+                title: "Error",
+                description: fetchedTransactions.error.message
+            })
+        } else {
+            setTransactions(fetchedTransactions?.success?.data);
+        }
+    };
+
+    const onDelete = useCallback(async (transaction: Transaction) => {
+        const response = await deleteTransaction(transaction.id!);
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onBatchDelete = useCallback(async (transactions: Transaction[]) => {
+        const response = await batchDeleteTransaction(transactions.map(c => c.id!));
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onEdit = useCallback((transaction: Transaction) => {
+        setSelectedTransaction(transaction);
+        setIsDialogOpen(true);
     }, []);
 
     const cardInfo: CardInfo[] = calculateCardInfo(transactions);
@@ -97,13 +139,34 @@ const TransactionsPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
-                            <NewTransactionDialog />
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
+                            <NewTransactionDialog
+                                isOpen={isDialogOpen}
+                                onOpenChange={(value: boolean) => {
+                                    setIsDialogOpen(value);
+                                    if (!value) {
+                                        setSelectedTransaction(null);
+                                    }
+                                }}
+                                transaction={selectedTransaction}
+                            />
                         </div>
                     </CardHeader>
 
                     <CardContent>
-                        <DataTable columns={transactionColumns} data={transactions} searchPlaceholder="Search transactions..." />
+                        <DataTable
+                            columns={transactionColumns({ onEdit, onDelete })}
+                            data={transactions}
+                            searchPlaceholder="Search transactions..."
+                            onDelete={onBatchDelete}
+                        />
                     </CardContent>
                 </Card>
             </main>

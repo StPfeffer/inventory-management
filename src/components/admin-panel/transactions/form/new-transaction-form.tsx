@@ -31,9 +31,7 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover";
-import {
-    cn
-} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -41,6 +39,9 @@ import { ToastAction } from "@/components/ui/toast";
 import { createTransaction } from "@/actions/transactions/create-transaction";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { ActionResponse } from "@/types/action";
+import { updateTransaction } from "@/actions/transactions/update-transaction";
 
 const formSchema = z.object({
     type: z
@@ -56,23 +57,40 @@ const formSchema = z.object({
         .gt(0, "Price must be greater than 0."),
 });
 
+interface NewTransactionFormProps {
+    _onSubmit: () => void;
+    transaction: Transaction | null;
+}
+
 const NewTransactionForm = ({
-    _onSubmit
-}: {
-    _onSubmit: () => void
-}) => {
+    _onSubmit,
+    transaction
+}: NewTransactionFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             price: 0,
         },
+        mode: 'onChange'
     });
 
     const { toast } = useToast();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (transaction) {
+            form.reset({
+                type: transaction.type,
+                date: transaction.date,
+                price: transaction.price,
+            });
+        } else {
+            form.reset();
+        }
+    }, [transaction]);
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const transaction: Transaction = {
+        const transactionInfo: Transaction = {
             price: values.price,
             date: values.date,
             type: values.type as TransactionType,
@@ -80,7 +98,13 @@ const NewTransactionForm = ({
             orderId: null
         }
 
-        const response = await createTransaction(transaction);
+        let response: ActionResponse;
+
+        if (transaction) {
+            response = await updateTransaction(transaction.id!, transactionInfo);
+        } else {
+            response = await createTransaction(transactionInfo);
+        }
 
         if (response.error) {
             toast({
@@ -116,7 +140,7 @@ const NewTransactionForm = ({
                                 <FormLabel>Type</FormLabel>
 
                                 <FormControl>
-                                    <Select onValueChange={field.onChange}>
+                                    <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a type" {...field} />
@@ -200,7 +224,9 @@ const NewTransactionForm = ({
                 </div>
 
                 <div className="flex justify-end">
-                    <Button type="submit">Create</Button>
+                    <Button type="submit">
+                        {transaction ? "Update" : "Create"}
+                    </Button>
                 </div>
             </form>
         </Form >

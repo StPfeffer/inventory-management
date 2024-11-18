@@ -14,7 +14,11 @@ interface NewCustomerDialogProps {
     customer: Customer | null;
 }
 
-const NewCustomerDialog = ({ isOpen, onOpenChange, customer }: NewCustomerDialogProps) => {
+const NewCustomerDialog = ({
+    isOpen,
+    onOpenChange,
+    customer
+}: NewCustomerDialogProps) => {
     return (
         <Dialog
             modal
@@ -28,7 +32,7 @@ const NewCustomerDialog = ({ isOpen, onOpenChange, customer }: NewCustomerDialog
             <DialogContent>
                 <DialogDescription>
                     {customer
-                        ? "Update the fields below to modify the customer’s information in your account."
+                        ? "Update the fields below to modify the customer's information in your account."
                         : "Enter the required details to add a new customer to your account and start managing their profile."}
                 </DialogDescription>
                 <DialogTitle>

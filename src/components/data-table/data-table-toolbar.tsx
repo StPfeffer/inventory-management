@@ -31,7 +31,7 @@ export function DataTableToolbar<TData>({
                         onChange={(event) =>
                             table.getColumn(searchColumn)?.setFilterValue(event.target.value)
                         }
-                        className="h-8 w-[245px] lg:w-[350px]"
+                        className="h-8 hidden xs:block xs:w-[150px] sm:w-[200px] md:w-[245px] lg:w-[350px]"
                     />
                 }
                 {/* {table.getAllColumns().find(x => x.id === "type") && (

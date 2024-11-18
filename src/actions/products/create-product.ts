@@ -15,7 +15,7 @@ export const createProduct = async (product: Product): Promise<ActionResponse> =
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

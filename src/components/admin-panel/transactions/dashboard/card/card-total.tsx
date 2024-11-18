@@ -43,7 +43,9 @@ export default function CardTotal({
             </CardHeader>
 
             <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
+                <div className="text-2xl font-bold">
+                    {value}
+                </div>
                 <p className={cn(
                     "text-xs text-muted-foreground",
                     textColor

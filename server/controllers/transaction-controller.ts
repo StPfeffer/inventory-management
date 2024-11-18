@@ -4,6 +4,7 @@ import {
 } from "express";
 import {
     addTransaction,
+    batchDeleteTransaction,
     deleteTransaction,
     getAllTransactions,
     getAllExpenses,
@@ -62,5 +63,11 @@ export const editTransaction = (req: Request, res: Response) => {
 export const removeTransaction = (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
     deleteTransaction(id);
+    res.status(204).send();
+};
+
+export const batchRemoveTransaction = (req: Request, res: Response) => {
+    const ids = req.body;
+    batchDeleteTransaction(ids);
     res.status(204).send();
 };

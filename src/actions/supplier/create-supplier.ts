@@ -15,7 +15,7 @@ export const createSupplier = async (supplier: Supplier): Promise<ActionResponse
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

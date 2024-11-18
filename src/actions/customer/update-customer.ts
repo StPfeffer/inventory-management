@@ -15,7 +15,7 @@ export const updateCustomer = async (id: number, customer: Customer): Promise<Ac
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

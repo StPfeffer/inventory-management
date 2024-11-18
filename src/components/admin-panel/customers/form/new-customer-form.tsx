@@ -18,6 +18,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { updateCustomer } from "@/actions/customer/update-customer";
+import { ActionResponse } from "@/types/action";
 
 const formSchema = z.object({
     name: z
@@ -76,7 +77,7 @@ const NewCustomerForm = ({
             address: values.address,
         }
 
-        let response;
+        let response: ActionResponse;
 
         if (customer) {
             response = await updateCustomer(customer.id!, customerInfo);

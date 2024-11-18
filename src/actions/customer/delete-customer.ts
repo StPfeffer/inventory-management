@@ -14,7 +14,7 @@ export const deleteCustomer = async (id: number): Promise<ActionResponse> => {
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {
@@ -36,7 +36,7 @@ export const batchDeleteCustomer = async (ids: number[]): Promise<ActionResponse
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

@@ -15,7 +15,7 @@ export const fetchRecentExpenses = async (): Promise<ActionResponse> => {
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {
@@ -37,7 +37,7 @@ export const fetchTransactions = async (): Promise<ActionResponse> => {
             }
         };
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
 
         return {
             error: {

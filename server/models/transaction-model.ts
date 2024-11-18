@@ -49,3 +49,14 @@ export const deleteTransaction = (id: number): void => {
 
     stmt.run(id);
 };
+
+export const batchDeleteTransaction = (ids: number[]): void => {
+    if (ids.length === 0) {
+        return;
+    }
+
+    const placeholders = ids.map(() => "?").join(", ");
+    const stmt = db.prepare(`DELETE FROM kf_transaction WHERE id IN (${placeholders})`);
+
+    stmt.run(...ids);
+}

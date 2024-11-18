@@ -20,4 +20,16 @@ export class TransactionService {
         return axiosInstance.post("api/transactions", transaction);
     }
 
+    update(id: number, transaction: Transaction) {
+        return axiosInstance.put("api/transactions/" + id, transaction);
+    }
+
+    delete(id: number) {
+        return axiosInstance.delete("api/transactions/" + id);
+    }
+
+    batchDelete(ids: number[]) {
+        return axiosInstance.post("api/transactions/batch", ids);
+    }
+
 }

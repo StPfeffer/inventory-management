@@ -22,6 +22,8 @@ import { useToast } from "@/hooks/use-toast";
 import { customerColumns } from "@/components/admin-panel/customers/data-table/columns/customer-columns";
 import NewCustomerDialog from "@/components/admin-panel/customers/dialog/new-customer-dialog";
 import { batchDeleteCustomer, deleteCustomer } from "@/actions/customer/delete-customer";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -120,7 +122,14 @@ const CustomersPage = () => {
                             </CardDescription>
                         </div>
 
-                        <div className="ml-auto gap-1">
+                        <div className="flex items-center ml-auto gap-2">
+                            <Button
+                                variant="ghost"
+                                className="relative h-10 w-10"
+                            >
+                                <RefreshCwIcon className="w-4 h-4" />
+                            </Button>
+
                             <NewCustomerDialog
                                 isOpen={isDialogOpen}
                                 onOpenChange={(value: boolean) => {

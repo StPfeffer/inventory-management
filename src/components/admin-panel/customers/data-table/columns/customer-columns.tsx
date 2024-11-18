@@ -10,7 +10,10 @@ interface CustomerColumnsProps {
     onDelete: (customer: Customer) => void
 }
 
-export const customerColumns = ({ onEdit, onDelete }: CustomerColumnsProps): ColumnDef<Customer>[] => [
+export const customerColumns = ({
+    onEdit,
+    onDelete
+}: CustomerColumnsProps): ColumnDef<Customer>[] => [
     {
         id: "select",
         header: ({ table }) => (

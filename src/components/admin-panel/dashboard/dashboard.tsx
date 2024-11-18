@@ -14,6 +14,9 @@ import { Transaction } from "shared/types/transaction";
 import { CardInfo } from "../transactions/dashboard/card/types";
 import { DashboardPieChart } from "./chart/pie-chart";
 import { DashboardRadarChart } from "./chart/radar-chart";
+import { useCallback } from "react";
+import { batchDeleteTransaction, deleteTransaction } from "@/actions/transactions/delete-transaction";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardProps {
     transactions: Transaction[];
@@ -24,6 +27,42 @@ const Dashboard = ({
     transactions,
     cardInfo
 }: DashboardProps) => {
+    const { toast } = useToast();
+
+    const onDelete = useCallback(async (transaction: Transaction) => {
+        const response = await deleteTransaction(transaction.id!);
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onBatchDelete = useCallback(async (transactions: Transaction[]) => {
+        const response = await batchDeleteTransaction(transactions.map(c => c.id!));
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onEdit = useCallback((_transaction: Transaction) => {
+    }, []);
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -61,7 +100,11 @@ const Dashboard = ({
                 </CardHeader>
 
                 <CardContent>
-                    <DataTable columns={transactionColumns} data={transactions} />
+                    <DataTable
+                        columns={transactionColumns({ onEdit, onDelete })}
+                        data={transactions}
+                        onDelete={onBatchDelete}
+                    />
                 </CardContent>
             </Card>
 

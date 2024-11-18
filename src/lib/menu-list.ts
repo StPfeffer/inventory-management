@@ -14,18 +14,19 @@ import {
     UserRound
 } from "lucide-react";
 
-type Submenu = {
+export type Submenu = {
     href: string;
     label: string;
     active: boolean;
     icon?: LucideIcon;
+    disabled?: boolean;
 };
 
 type Menu = {
     href: string;
     label: string;
     active: boolean;
-    disabled: boolean;
+    disabled?: boolean;
     icon: LucideIcon;
     submenus: Submenu[];
 };
@@ -44,7 +45,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "/dashboard",
                     label: "Dashboard",
                     active: pathname.includes("/dashboard"),
-                    disabled: false,
                     icon: LayoutGrid,
                     submenus: []
                 },
@@ -65,9 +65,14 @@ export function getMenuList(pathname: string): Group[] {
                     href: "",
                     label: "Inventory",
                     active: pathname.includes("/inventory"),
-                    disabled: false,
                     icon: PackageSearch,
                     submenus: [
+                        {
+                            href: "/inventory",
+                            label: "Inventory",
+                            active: pathname === "/inventory",
+                            disabled: true
+                        },
                         {
                             href: "/inventory/products",
                             label: "Products",
@@ -86,7 +91,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "/orders",
                     label: "Orders",
                     active: pathname.includes("/orders"),
-                    disabled: false,
                     icon: Store,
                     submenus: []
                 },
@@ -94,7 +98,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "/customers",
                     label: "Customers",
                     active: pathname.includes("/customers"),
-                    disabled: false,
                     icon: UserRound,
                     submenus: []
                 },
@@ -102,7 +105,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "",
                     label: "Transactions",
                     active: pathname.includes("/transactions"),
-                    disabled: false,
                     icon: CreditCard,
                     submenus: [
                         {
@@ -128,7 +130,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "/users",
                     label: "Users",
                     active: pathname.includes("/users"),
-                    disabled: false,
                     icon: Users,
                     submenus: []
                 },
@@ -141,7 +142,6 @@ export function getMenuList(pathname: string): Group[] {
                     href: "/settings/account",
                     label: "Account",
                     active: pathname.includes("/settings/account"),
-                    disabled: false,
                     icon: Settings,
                     submenus: []
                 }

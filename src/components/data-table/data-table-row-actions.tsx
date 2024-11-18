@@ -67,8 +67,10 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                     <Dialog>
-                        <DialogTrigger>
-                            <div className="w-full h-full">Delete</div>
+                        <DialogTrigger className="w-full flex">
+                            <div>
+                                Delete
+                            </div>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -85,7 +87,7 @@ export function DataTableRowActions<TData>({
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button onClick={() => onDelete ? handleDeleteClick : {}}>
+                                    <Button onClick={() => handleDeleteClick()}>
                                         Delete
                                     </Button>
                                 </DialogClose>

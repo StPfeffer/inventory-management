@@ -16,6 +16,8 @@ import CustomerDetailsPage from "@/pages/customers/details";
 import ProductDetailsPage from "@/pages/products/details";
 import SuppliersPage from "@/pages/supplier/page";
 import SupplierDetailsPage from "@/pages/supplier/details";
+import UsersPage from "@/pages/users/page";
+import UserDetailsPage from "@/pages/users/details";
 
 function CustomRoutes() {
     return (
@@ -33,6 +35,8 @@ function CustomRoutes() {
             <Route path="/inventory/suppliers/:supplierId" element={<DashboardLayout><SupplierDetailsPage /></DashboardLayout>} />
             <Route path="/customers" element={<DashboardLayout><CustomersPage /></DashboardLayout>} />
             <Route path="/customers/:customerId" element={<DashboardLayout><CustomerDetailsPage /></DashboardLayout>} />
+            <Route path="/users" element={<DashboardLayout><UsersPage /></DashboardLayout>} />
+            <Route path="/users/:userId" element={<DashboardLayout><UserDetailsPage /></DashboardLayout>} />
         </Routes>
     )
 }

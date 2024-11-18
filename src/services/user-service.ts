@@ -15,4 +15,16 @@ export class UserService {
         return axiosInstance.post("api/users", user);
     }
 
+    update(id: number, user: User) {
+        return axiosInstance.put("api/users/" + id, user);
+    }
+
+    delete(id: number) {
+        return axiosInstance.delete("api/users/" + id);
+    }
+
+    batchDelete(ids: number[]) {
+        return axiosInstance.post("api/users/batch", ids);
+    }
+
 }

@@ -1,9 +1,5 @@
-import { fetchTransactions } from "@/actions/transactions/fetch-transaction";
-import CardTotal from "@/components/admin-panel/transactions/dashboard/card/card-total";
-import { calculateCardInfo } from "@/components/admin-panel/transactions/dashboard/card/helper";
-import { CardInfo } from "@/components/admin-panel/transactions/dashboard/card/types";
-import NewTransactionDialog from "@/components/admin-panel/transactions/dialog/new-transaction-dialog";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
+import { DataTable } from "@/components/data-table/data-table";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -19,22 +15,23 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Transaction } from "shared/types/transaction";
+import { User } from "shared/types/user";
 import { useCallback, useEffect, useState } from "react";
-import { DataTable } from "@/components/data-table/data-table";
+import { fetchUsers } from "@/actions/users/fetch-users";
 import { useToast } from "@/hooks/use-toast";
+import { userColumns } from "@/components/admin-panel/users/data-table/columns/user-columns";
+import NewUserDialog from "@/components/admin-panel/users/dialog/new-user-dialog";
+import {
+    batchDeleteUser,
+    deleteUser
+} from "@/actions/users/delete-user";
 import { Button } from "@/components/ui/button";
 import { RefreshCwIcon } from "lucide-react";
-import {
-    batchDeleteTransaction,
-    deleteTransaction
-} from "@/actions/transactions/delete-transaction";
-import { transactionColumns } from "@/components/admin-panel/transactions/data-table/columns/transactions-columns";
 
-const TransactionsPage = () => {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+const UsersPage = () => {
+    const [users, setUsers] = useState<User[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
+    const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
     const { toast } = useToast();
 
@@ -43,20 +40,20 @@ const TransactionsPage = () => {
     }, []);
 
     const fetchData = async () => {
-        const fetchedTransactions = await fetchTransactions();
+        const fetchedUsers = await fetchUsers();
 
-        if (fetchedTransactions.error) {
+        if (fetchedUsers.error) {
             toast({
                 title: "Error",
-                description: fetchedTransactions.error.message
+                description: fetchedUsers.error.message
             })
         } else {
-            setTransactions(fetchedTransactions?.success?.data);
+            setUsers(fetchedUsers?.success?.data);
         }
     };
 
-    const onDelete = useCallback(async (transaction: Transaction) => {
-        const response = await deleteTransaction(transaction.id!);
+    const onDelete = useCallback(async (user: User) => {
+        const response = await deleteUser(user.id!);
 
         if (response.error) {
             toast({
@@ -71,8 +68,8 @@ const TransactionsPage = () => {
         }
     }, []);
 
-    const onBatchDelete = useCallback(async (transactions: Transaction[]) => {
-        const response = await batchDeleteTransaction(transactions.map(c => c.id!));
+    const onBatchDelete = useCallback(async (users: User[]) => {
+        const response = await batchDeleteUser(users.map(c => c.id!));
 
         if (response.error) {
             toast({
@@ -87,15 +84,13 @@ const TransactionsPage = () => {
         }
     }, []);
 
-    const onEdit = useCallback((transaction: Transaction) => {
-        setSelectedTransaction(transaction);
+    const onEdit = useCallback((user: User) => {
+        setSelectedUser(user);
         setIsDialogOpen(true);
     }, []);
 
-    const cardInfo: CardInfo[] = calculateCardInfo(transactions);
-
     return (
-        <ContentLayout title="Transactions">
+        <ContentLayout title="Users">
             <div className="flex w-full justify-between">
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -109,7 +104,7 @@ const TransactionsPage = () => {
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbPage>
-                                Transactions
+                                Users
                             </BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
@@ -117,28 +112,16 @@ const TransactionsPage = () => {
             </div>
 
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-                <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                    {cardInfo.map((info, index) => (
-                        <CardTotal
-                            key={index}
-                            label={info.label}
-                            value={info.value}
-                            textColor={info.textColor}
-                            description={info.description}
-                        />
-                    ))}
-                </div>
-
                 <Card
                     className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
                 >
                     <CardHeader className="flex flex-row items-center">
                         <div className="grid gap-2">
                             <CardTitle>
-                                Transactions
+                                Users
                             </CardTitle>
                             <CardDescription>
-                                A detailed overview of all financial activities.
+                                A detailed overview of all users.
                             </CardDescription>
                         </div>
 
@@ -150,24 +133,25 @@ const TransactionsPage = () => {
                                 <RefreshCwIcon className="w-4 h-4" />
                             </Button>
 
-                            <NewTransactionDialog
+                            <NewUserDialog
                                 isOpen={isDialogOpen}
                                 onOpenChange={(value: boolean) => {
                                     setIsDialogOpen(value);
                                     if (!value) {
-                                        setSelectedTransaction(null);
+                                        setSelectedUser(null);
                                     }
                                 }}
-                                transaction={selectedTransaction}
+                                user={selectedUser}
                             />
                         </div>
                     </CardHeader>
 
                     <CardContent>
                         <DataTable
-                            columns={transactionColumns({ onEdit, onDelete })}
-                            data={transactions}
-                            searchPlaceholder="Search transactions..."
+                            columns={userColumns({ onEdit, onDelete })}
+                            data={users}
+                            searchPlaceholder="Search users..."
+                            searchColumn="name"
                             onDelete={onBatchDelete}
                         />
                     </CardContent>
@@ -177,4 +161,4 @@ const TransactionsPage = () => {
     )
 }
 
-export default TransactionsPage;
+export default UsersPage;

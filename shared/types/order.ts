@@ -1,5 +1,5 @@
 export interface Order {
-    id: number;
+    id?: number;
     date: Date;
     customerId: number;
     status: string;

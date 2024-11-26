@@ -18,7 +18,7 @@ export const deleteOrder = async (id: number): Promise<ActionResponse> => {
 
         return {
             error: {
-                message: "An error occured when trying to delete the customer, please try again later.",
+                message: "An error occured when trying to delete the order, please try again later.",
                 data: []
             }
         };

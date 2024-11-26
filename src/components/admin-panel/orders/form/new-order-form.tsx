@@ -10,22 +10,35 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActionResponse } from "@/types/action";
-import { Order } from "shared/types/order";
+import { Order, orderStatusDetails } from "shared/types/order";
 import { updateOrder } from "@/actions/order/update-order";
 import { createOrder } from "@/actions/order/create-order";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { Customer } from "@/types/customer";
+import { fetchCustomers } from "@/actions/customer/fetch-customers";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const formSchema = z.object({
-    date: z
-        .date(),
+    date: z.date({
+        required_error: "A date is required."
+    }),
     customerId: z
-        .number(),
+        .number({ required_error: "Please enter the customer ID." })
+        .min(1, "The customer ID must be a positive number."),
     status: z
         .string({ required_error: "Please enter the status." })
         .min(3, "The status must be at least 3 characters long.")
@@ -66,6 +79,25 @@ const NewOrderForm = ({
             form.reset();
         }
     }, [order]);
+
+    const [customers, setCustomers] = useState<Customer[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedOrders= await fetchCustomers();
+
+            if (fetchedOrders.error) {
+                toast({
+                    title: "Error",
+                    description: fetchedOrders.error.message
+                })
+            } else {
+                setCustomers(fetchedOrders?.success?.data);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const orderInfo: Order = {
@@ -108,21 +140,51 @@ const NewOrderForm = ({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel>Date</FormLabel>
+            <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col w-full">
+                                <FormLabel className="pb-1">
+                                    Date
+                                </FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) =>
+                                                date > new Date() || date < new Date("1900-01-01")
+                                            }
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
 
-                            <FormControl>
-                                <Input type="date" {...field}/>
-                            </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
                 <div className="flex w-full justify-between space-x-5">
                     <FormField
@@ -133,7 +195,33 @@ const NewOrderForm = ({
                                 <FormLabel>Customer</FormLabel>
 
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value?.toString()}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue
+                                                    placeholder={customers ? "Select a customer" : "No Customers found"}
+                                                    {...field}
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Customer</SelectLabel>
+
+                                                {customers && customers.map((customer) =>
+                                                    <SelectItem
+                                                        key={customer.id}
+                                                        value={customer.id ? customer.id.toString() : "-1"}
+                                                    >
+                                                        {customer.name}
+                                                    </SelectItem>
+                                                )}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
 
                                 <FormMessage />
@@ -149,7 +237,25 @@ const NewOrderForm = ({
                                 <FormLabel>Status</FormLabel>
 
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a type" {...field} />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Status</SelectLabel>
+                                                {orderStatusDetails.map((c) => (
+                                                    <SelectItem key={c.type} value={c.type}>
+                                                        <div className="flex items-center">
+                                                            {c.description}
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
 
                                 <FormMessage />
@@ -157,22 +263,6 @@ const NewOrderForm = ({
                         )}
                     />
                 </div>
-
-                <FormField
-                    control={form.control}
-                    name="total"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel>Total</FormLabel>
-
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
                 <div className="flex justify-end">
                     <Button type="submit">

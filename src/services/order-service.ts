@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { Order } from "shared/types/order";
+import { Order, OrderItem } from "shared/types/order";
 
 export class OrderService {
 
@@ -25,6 +25,34 @@ export class OrderService {
 
     batchDelete(ids: number[]) {
         return axiosInstance.post("api/orders/batch", ids);
+    }
+
+    listItems() {
+        return axiosInstance.get("api/items");
+    }
+
+    listItemsByOrder(idOrder: number) {
+        return axiosInstance.get("api/items" + idOrder);
+    }
+
+    findItem(id: number) {
+        return axiosInstance.get("api/items/" + id);
+    }
+
+    saveItem(orderItem: OrderItem) {
+        return axiosInstance.post("api/items", orderItem);
+    }
+
+    updateItem(id: number, orderItem: OrderItem) {
+        return axiosInstance.put("api/items/" + id, orderItem);
+    }
+
+    deleteItem(id: number) {
+        return axiosInstance.delete("api/items/" + id);
+    }
+
+    batchDeleteItems(ids: number[]) {
+        return axiosInstance.post("api/items/batch", ids);
     }
 
 }

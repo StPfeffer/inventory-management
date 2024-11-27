@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -52,10 +53,12 @@ export function RegisterForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        const hashedPassword = await bcrypt.hash(values.password, 10);
+
         const userInfo: User = {
             name: values.name,
             email: values.email,
-            password: values.password
+            password: hashedPassword
         };
 
         const createdUser = await createUser(userInfo);

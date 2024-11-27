@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -68,7 +69,9 @@ export function LoginForm() {
 
         const user = fetchedUser?.success?.data;
 
-        if (user.password !== values.password) {
+        const isMatch = await bcrypt.compare(values.password, user.password);
+
+        if (!isMatch) {
             form.setError("password", { type: "manual", message: "Invalid password. Please try again." });
 
             return;

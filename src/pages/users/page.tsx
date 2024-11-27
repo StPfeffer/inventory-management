@@ -16,7 +16,11 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { User } from "shared/types/user";
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState
+} from "react";
 import { fetchUsers } from "@/actions/users/fetch-users";
 import { useToast } from "@/hooks/use-toast";
 import { userColumns } from "@/components/admin-panel/users/data-table/columns/user-columns";
@@ -25,8 +29,7 @@ import {
     batchDeleteUser,
     deleteUser
 } from "@/actions/users/delete-user";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const UsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -126,12 +129,7 @@ const UsersPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewUserDialog
                                 isOpen={isDialogOpen}

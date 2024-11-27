@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +12,6 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/components/auth/auth-context-provider";
-import { useState } from "react";
 import {
     Form,
     FormControl,
@@ -23,29 +22,26 @@ import {
 } from "@/components/ui/form";
 import { User } from "shared/types/user";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { createUser } from "@/actions/users/create-user";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     name: z
-        .string({
-            required_error: "Please provide a valid name."
-        })
-        .min(3, "Your name must be at least 3 characters long to be valid.")
-        .max(60, "Your name cannot exceed 60 characters."),
+        .string({ required_error: "Please enter a name.", })
+        .min(5, "Name must contain at least 5 characters.")
+        .max(50, { message: 'Name should be shorter than 50 characteres.' }),
     email: z
-        .string({
-            required_error: "Please provide a valid email."
-        })
-        .email(),
+        .string({ required_error: "Please enter a email.", })
+        .min(5, "email must contain at least 5 characters.")
+        .email("This is not a valid email."),
     password: z
-        .string({
-            required_error: "Please enter your password to continue.",
-        })
-        .min(6, "Password must contain at least 6 characters."),
+        .string({ required_error: "Please enter a valid password." })
+        .min(8, "Password must be at least 8 characters.")
+        .max(100, { message: 'Password should be shorter than 100 characteres.' })
 });
 
 export function RegisterForm() {
-    const { login } = useAuth();
-    const [currentStep, setCurrentStep] = useState<number>(0);
+    const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -56,23 +52,24 @@ export function RegisterForm() {
         }
     });
 
-    function advanceStep() {
-        setCurrentStep(currentStep + 1);
-    }
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const hashedPassword = await bcrypt.hash(values.password, 10);
 
-    function previousStep() {
-        setCurrentStep(currentStep - 1);
-    }
-
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const user: User = {
-            id: -1, // TODO
+        const userInfo: User = {
             name: values.name,
             email: values.email,
-            password: values.password
+            password: hashedPassword
         };
 
-        login({ ...user });
+        const createdUser = await createUser(userInfo);
+
+        if (createdUser.error) {
+            form.setError("email", { type: "manual", message: createdUser.error.message });
+
+            return;
+        }
+
+        navigate("/login");
     }
 
     return (
@@ -107,75 +104,59 @@ export function RegisterForm() {
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        {currentStep === 0 &&
-                            <>
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Email</FormLabel>
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Name</FormLabel>
 
-                                            <FormControl>
-                                                <Input type="email" {...field} />
-                                            </FormControl>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
 
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                <FormField
-                                    control={form.control}
-                                    name="password"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Password</FormLabel>
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Email</FormLabel>
 
-                                            <FormControl>
-                                                <Input type="password" {...field} />
-                                            </FormControl>
+                                    <FormControl>
+                                        <Input type="email" {...field} />
+                                    </FormControl>
 
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                <div className="flex flex-col space-y-4 w-full">
-                                    <Button type="button" className="w-full" onClick={advanceStep}>
-                                        Continue
-                                    </Button>
-                                </div>
-                            </>
-                        }
-                        {currentStep === 1 &&
-                            <>
-                                <FormField
-                                    control={form.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Name</FormLabel>
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Password</FormLabel>
 
-                                            <FormControl>
-                                                <Input {...field} />
-                                            </FormControl>
+                                    <FormControl>
+                                        <Input type="password" {...field} />
+                                    </FormControl>
 
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                <div className="flex flex-col space-y-4 w-full">
-                                    <Button type="button" variant="outline" className="w-full" onClick={previousStep}>
-                                        Previous
-                                    </Button>
-                                    <Button type="submit" className="w-full">
-                                        Create account
-                                    </Button>
-                                </div>
-                            </>
-                        }
+                        <div className="flex flex-col space-y-4 w-full">
+                            <Button type="submit" className="w-full">
+                                Create account
+                            </Button>
+                        </div>
 
                         <div className="mt-4 text-center text-sm">
                             Already have an account?{" "}

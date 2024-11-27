@@ -15,14 +15,16 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState
+} from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Supplier } from "shared/types/supplier";
 import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
 import NewSupplierDialog from "@/components/admin-panel/suppliers/dialog/new-supplier-dialog";
 import { supplierColumns } from "@/components/admin-panel/suppliers/data-table/columns/supplier-columns";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const SuppliersPage = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -30,21 +32,21 @@ const SuppliersPage = () => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchData = async () => {
-            const fetchedSuppliers = await fetchSuppliers();
-
-            if (fetchedSuppliers.error) {
-                toast({
-                    title: "Error",
-                    description: fetchedSuppliers.error.message
-                })
-            } else {
-                setSuppliers(fetchedSuppliers?.success?.data);
-            }
-        };
-
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        const fetchedSuppliers = await fetchSuppliers();
+
+        if (fetchedSuppliers.error) {
+            toast({
+                title: "Error",
+                description: fetchedSuppliers.error.message
+            })
+        } else {
+            setSuppliers(fetchedSuppliers?.success?.data);
+        }
+    };
 
     return (
         <ContentLayout title="Suppliers">
@@ -91,12 +93,7 @@ const SuppliersPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewSupplierDialog />
                         </div>

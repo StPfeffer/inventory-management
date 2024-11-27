@@ -48,7 +48,7 @@ export function DataTableViewOptions<TData>({
                     <DialogTrigger>
                         <Button variant="destructive" size="sm">
                             <Trash2 className="h-4 w-4" />
-                            Delete
+                            Delete ({table.getFilteredSelectedRowModel().rows.length})
                         </Button>
                     </DialogTrigger>
 
@@ -57,7 +57,7 @@ export function DataTableViewOptions<TData>({
                             <DialogTitle>Are you sure?</DialogTitle>
 
                             <DialogDescription>
-                                Do you want to delete all the selected entries?
+                                Do you want to delete all the <b>{table.getFilteredSelectedRowModel().rows.length}</b> selected entries?
                                 This cannot be undone.
                             </DialogDescription>
                         </DialogHeader>

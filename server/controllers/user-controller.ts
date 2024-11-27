@@ -8,12 +8,18 @@ import {
     batchDeleteUser,
     getAllUsers,
     getUserById,
+    getUserByEmail,
     updateUser
 } from "server/models/user-model";
 
-export const getUsers = (_req: Request, res: Response) => {
-    const users = getAllUsers();
-    res.json(users);
+export const getUsers = (req: Request, res: Response) => {
+    if (req.query.email) {
+        const user = getUserByEmail(req.query.email as string);
+        res.json(user);
+    } else {
+        const users = getAllUsers();
+        res.json(users);
+    }
 };
 
 export const getUser = (req: Request, res: Response) => {

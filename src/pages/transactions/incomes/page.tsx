@@ -15,37 +15,39 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Transaction } from "shared/types/transaction";
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState
+} from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { useToast } from "@/hooks/use-toast";
 import { fetchIncomes } from "@/actions/transactions/fetch-incomes";
 import { incomesColumns } from "@/components/admin-panel/transactions/data-table/columns/incomes-columns";
 import NewIncomeDialog from "@/components/admin-panel/transactions/dialog/new-income-dialog";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const IncomesPage = () => {
     const [incomes, setIncomes] = useState<Transaction[]>([]);
 
     const { toast } = useToast();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const fetchedIncomes = await fetchIncomes();
-
-            if (fetchedIncomes.error) {
-                toast({
-                    title: "Error",
-                    description: fetchedIncomes.error.message
-                })
-            } else {
-                setIncomes(fetchedIncomes?.success?.data);
-            }
-        };
-
+    useEffect(() => {        
         fetchData();
     }, []);
 
+    const fetchData = async () => {
+        const fetchedIncomes = await fetchIncomes();
+
+        if (fetchedIncomes.error) {
+            toast({
+                title: "Error",
+                description: fetchedIncomes.error.message
+            })
+        } else {
+            setIncomes(fetchedIncomes?.success?.data);
+        }
+    };
+    
     return (
         <ContentLayout title="Incomes">
             <div className="flex w-full justify-between">
@@ -89,12 +91,7 @@ const IncomesPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewIncomeDialog />
                         </div>

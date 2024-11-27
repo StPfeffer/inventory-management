@@ -15,36 +15,38 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Product } from "shared/types/product";
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState
+} from "react";
 import NewProductDialog from "@/components/admin-panel/products/dialog/new-product-dialog";
 import { productsColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
 import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
 import { ProductsDataTable } from "@/components/admin-panel/products/data-table/products-data-table";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
 
     const { toast } = useToast();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const fetchedProducts = await fetchProducts();
-
-            if (fetchedProducts.error) {
-                toast({
-                    title: "Error",
-                    description: fetchedProducts.error.message
-                })
-            } else {
-                setProducts(fetchedProducts?.success?.data);
-            }
-        };
-
+    useEffect(() => {        
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        const fetchedProducts = await fetchProducts();
+
+        if (fetchedProducts.error) {
+            toast({
+                title: "Error",
+                description: fetchedProducts.error.message
+            })
+        } else {
+            setProducts(fetchedProducts?.success?.data);
+        }
+    };
 
     return (
         <ContentLayout title="Products">
@@ -91,12 +93,7 @@ const ProductsPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewProductDialog />
                         </div>

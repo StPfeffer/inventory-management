@@ -143,7 +143,8 @@ export function getMenuList(pathname: string): Group[] {
                     label: "Account",
                     active: pathname.includes("/settings/account"),
                     icon: Settings,
-                    submenus: []
+                    submenus: [],
+                    disabled: true
                 }
             ]
         }

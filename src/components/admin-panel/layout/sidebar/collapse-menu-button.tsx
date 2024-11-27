@@ -140,11 +140,11 @@ export function CollapseMenuButton({
                                         <span className={cn(isOpen === false ? "" : "mr-4")}>
                                             <Icon size={18} />
                                         </span>
-                                        <p
-                                            className={cn(
-                                                "max-w-[200px] truncate",
-                                                isOpen === false ? "opacity-0" : "opacity-100"
-                                            )}
+
+                                        <p className={cn(
+                                            "max-w-[200px] truncate",
+                                            isOpen === false ? "opacity-0" : "opacity-100"
+                                        )}
                                         >
                                             {label}
                                         </p>
@@ -153,23 +153,33 @@ export function CollapseMenuButton({
                             </Button>
                         </DropdownMenuTrigger>
                     </TooltipTrigger>
+
                     <TooltipContent side="right" align="start" alignOffset={2}>
                         {label}
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
+
             <DropdownMenuContent side="right" sideOffset={25} align="start">
                 <DropdownMenuLabel className="max-w-[190px] truncate">
                     {label}
                 </DropdownMenuLabel>
+
                 <DropdownMenuSeparator />
-                {submenus.map(({ href, label }, index) => (
+
+                {submenus.map(({ href, label, disabled }, index) => (
                     <DropdownMenuItem key={index} asChild>
-                        <a className="cursor-pointer" href={href}>
-                            <p className="max-w-[180px] truncate">{label}</p>
+                        <a className={disabled ? "pointer-events-none" : "cursor-pointer"} href={href}>
+                            <p className={cn(
+                                "max-w-[180px] truncate",
+                                disabled ? "text-gray-300 dark:text-zinc-700" : ""
+                            )}>
+                                {label}
+                            </p>
                         </a>
                     </DropdownMenuItem>
                 ))}
+
                 <DropdownMenuArrow className="fill-border" />
             </DropdownMenuContent>
         </DropdownMenu>

@@ -47,3 +47,34 @@ export const fetchUser = async (userId: string): Promise<ActionResponse> => {
         };
     }
 }
+
+export const fetchUserByEmail = async (email: string): Promise<ActionResponse> => {
+    try {
+        const user = await userService.findByEmail(email);
+
+        if (user.data && user.data !== "") {
+            return {
+                success: {
+                    message: "",
+                    data: user.data as User
+                }
+            };
+        }
+
+        return {
+            error: {
+                message: "Email not found. Please try again.",
+                data: null
+            }
+        }
+    } catch (error: any) {
+        console.error(error);
+
+        return {
+            error: {
+                message: "An error occurred when trying to search for the user data, please try again later",
+                data: []
+            }
+        };
+    }
+}

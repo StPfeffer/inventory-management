@@ -23,13 +23,12 @@ import { Transaction } from "shared/types/transaction";
 import { useCallback, useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
 import {
     batchDeleteTransaction,
     deleteTransaction
 } from "@/actions/transactions/delete-transaction";
 import { transactionColumns } from "@/components/admin-panel/transactions/data-table/columns/transactions-columns";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const TransactionsPage = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -143,12 +142,7 @@ const TransactionsPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewTransactionDialog
                                 isOpen={isDialogOpen}

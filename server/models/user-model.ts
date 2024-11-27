@@ -13,6 +13,12 @@ export const getUserById = (id: number): User | undefined => {
     return stmt.get(id) as User | undefined;
 };
 
+export const getUserByEmail = (email: string): User | undefined => {
+    const stmt = db.prepare("SELECT * FROM kf_user WHERE email = ?");
+
+    return stmt.get(email) as User | undefined;
+}
+
 export const addUser = (user: Omit<User, "id">): User => {
     const { name, email, password } = user;
     const stmt = db.prepare(
@@ -26,7 +32,7 @@ export const addUser = (user: Omit<User, "id">): User => {
 export const updateUser = (id: number, user: Omit<User, "id">): void => {
     const { name, email, password } = user;
     const stmt = db.prepare(
-        "UPDATE kf_user SET name = ?, email = password ? WHERE id = ?"
+        "UPDATE kf_user SET name = ?, email = ?, password = ? WHERE id = ?"
     );
 
     stmt.run(name, email, password, id);

@@ -22,18 +22,15 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { User } from "shared/types/user";
+import { fetchUserByEmail } from "@/actions/users/fetch-users";
 
 const formSchema = z.object({
     email: z
-        .string({
-            required_error: "Please provide a valid email.",
-        })
+        .string({ required_error: "Please provide a valid email.", })
         .min(5, "Your email must be at least 10 characters long to be valid.")
-        .max(25, "Your email cannot exceed 25 characters."),
+        .email(),
     password: z
-        .string({
-            required_error: "Please enter your password to continue.",
-        })
+        .string({ required_error: "Please enter your password to continue.", })
 });
 
 export function LoginForm() {
@@ -54,24 +51,26 @@ export function LoginForm() {
         password: "admin",
     }
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const existingUsers: User[] = JSON.parse(localStorage.getItem("users") || "[]");
-
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         const email = values.email;
 
         if (email === "admin@admin.com") {
             login({ ...adminUser });
         }
 
-        const user = existingUsers.find(u => u.email === email);
+        const fetchedUser = await fetchUserByEmail(email);
 
-        if (!user) {
-            form.setError("email", { type: "manual", message: "Email not found. Please try again." });
+        if (fetchedUser.error) {
+            form.setError("email", { type: "manual", message: fetchedUser.error.message });
+
             return;
         }
 
+        const user = fetchedUser?.success?.data;
+
         if (user.password !== values.password) {
             form.setError("password", { type: "manual", message: "Invalid password. Please try again." });
+
             return;
         }
 
@@ -97,7 +96,7 @@ export function LoginForm() {
                                     <FormLabel>Email</FormLabel>
 
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input required {...field} />
                                     </FormControl>
 
                                     <FormMessage />
@@ -122,7 +121,7 @@ export function LoginForm() {
                                         </FormLabel>
 
                                         <FormControl>
-                                            <Input type="password" {...field} />
+                                            <Input required type="password" {...field} />
                                         </FormControl>
 
                                         <FormMessage />

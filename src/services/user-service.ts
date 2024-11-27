@@ -11,6 +11,10 @@ export class UserService {
         return axiosInstance.get("api/users/" + id);
     }
 
+    findByEmail(email: string) {
+        return axiosInstance.get("api/users?email=" + email);
+    }
+
     save(user: User) {
         return axiosInstance.post("api/users", user);
     }

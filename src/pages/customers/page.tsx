@@ -16,14 +16,20 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Customer } from "shared/types/customer";
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState
+} from "react";
 import { fetchCustomers } from "@/actions/customer/fetch-customers";
 import { useToast } from "@/hooks/use-toast";
 import { customerColumns } from "@/components/admin-panel/customers/data-table/columns/customer-columns";
 import NewCustomerDialog from "@/components/admin-panel/customers/dialog/new-customer-dialog";
-import { batchDeleteCustomer, deleteCustomer } from "@/actions/customer/delete-customer";
-import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import {
+    batchDeleteCustomer,
+    deleteCustomer
+} from "@/actions/customer/delete-customer";
+import RefreshButton from "@/components/ui/refresh-button";
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -123,12 +129,7 @@ const CustomersPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewCustomerDialog
                                 isOpen={isDialogOpen}

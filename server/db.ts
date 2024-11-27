@@ -75,6 +75,10 @@ try {
             email TEXT,
             password TEXT
         );
+
+        CREATE UNIQUE INDEX IF NOT EXISTS kf_user_unq ON kf_user(email);
+        CREATE UNIQUE INDEX IF NOT EXISTS kf_supplier_unq ON kf_supplier(document);
+        CREATE UNIQUE INDEX IF NOT EXISTS kf_customer_unq ON kf_customer(document);
     `);
 } catch (error) {
     console.error("Error creating tables:", error);

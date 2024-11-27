@@ -15,7 +15,11 @@ import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ActionResponse } from "@/types/action";
-import { Order, orderStatusDetails } from "shared/types/order";
+import {
+    Order,
+    OrderStatus,
+    orderStatusDetails
+} from "shared/types/order";
 import { updateOrder } from "@/actions/order/update-order";
 import { createOrder } from "@/actions/order/create-order";
 import {
@@ -27,18 +31,22 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Customer } from "@/types/customer";
 import { fetchCustomers } from "@/actions/customer/fetch-customers";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
+import MoneyInput from "@/components/geral/money-input";
+import { Customer } from "shared/types/customer";
 
 const formSchema = z.object({
-    date: z.date({
-        required_error: "A date is required."
-    }),
-    customerId: z
-        .number({ required_error: "Please enter the customer ID." })
-        .min(1, "The customer ID must be a positive number."),
+    date: z.date({ required_error: "A date is required." }),
+    customer: z.string({ required_error: "Please, select a customer. " }),
     status: z
         .string({ required_error: "Please enter the status." })
         .min(3, "The status must be at least 3 characters long.")
@@ -48,7 +56,6 @@ const formSchema = z.object({
         .min(0, "The total amount must be greater than or equal to 0.")
         .max(1000000, { message: "The total amount must be less than or equal to 1,000,000." })
 });
-
 
 interface NewOrderFormProps {
     _onSubmit: () => void;
@@ -71,7 +78,7 @@ const NewOrderForm = ({
         if (order) {
             form.reset({
                 date: order.date,
-                customerId: order.customerId,
+                customer: JSON.stringify(order.customer),
                 status: order.status,
                 total: order.total,
             });
@@ -84,7 +91,7 @@ const NewOrderForm = ({
 
     useEffect(() => {
         const fetchData = async () => {
-            const fetchedOrders= await fetchCustomers();
+            const fetchedOrders = await fetchCustomers();
 
             if (fetchedOrders.error) {
                 toast({
@@ -100,10 +107,12 @@ const NewOrderForm = ({
     }, []);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        const customer: Customer = JSON.parse(values.customer);
+
         const orderInfo: Order = {
             date: values.date,
-            customerId: values.customerId,
-            status: values.status,
+            customer: customer,
+            status: values.status as OrderStatus,
             total: values.total,
         }
 
@@ -140,56 +149,56 @@ const NewOrderForm = ({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-                        control={form.control}
-                        name="date"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col w-full">
-                                <FormLabel className="pb-1">
-                                    Date
-                                </FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(field.value, "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) =>
-                                                date > new Date() || date < new Date("1900-01-01")
-                                            }
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col w-full">
+                            <FormLabel className="pb-1">
+                                Date
+                            </FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "pl-3 text-left font-normal",
+                                                !field.value && "text-muted-foreground"
+                                            )}
+                                        >
+                                            {field.value ? (
+                                                format(field.value, "PPP")
+                                            ) : (
+                                                <span>Pick a date</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        disabled={(date) =>
+                                            date > new Date() || date < new Date("1900-01-01")
+                                        }
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
 
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
 
                 <div className="flex w-full justify-between space-x-5">
                     <FormField
                         control={form.control}
-                        name="customerId"
+                        name="customer"
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel>Customer</FormLabel>
@@ -209,12 +218,12 @@ const NewOrderForm = ({
                                         </FormControl>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>Customer</SelectLabel>
+                                                <SelectLabel>Customers</SelectLabel>
 
                                                 {customers && customers.map((customer) =>
                                                     <SelectItem
                                                         key={customer.id}
-                                                        value={customer.id ? customer.id.toString() : "-1"}
+                                                        value={JSON.stringify(customer)}
                                                     >
                                                         {customer.name}
                                                     </SelectItem>
@@ -240,9 +249,10 @@ const NewOrderForm = ({
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a type" {...field} />
+                                                <SelectValue placeholder="Select a status" {...field} />
                                             </SelectTrigger>
                                         </FormControl>
+
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Status</SelectLabel>
@@ -263,6 +273,12 @@ const NewOrderForm = ({
                         )}
                     />
                 </div>
+
+                <MoneyInput
+                    form={form}
+                    name="total"
+                    label="Total"
+                />
 
                 <div className="flex justify-end">
                     <Button type="submit">

@@ -40,7 +40,7 @@ function CustomRoutes() {
             <Route path="/users" element={<DashboardLayout><UsersPage /></DashboardLayout>} />
             <Route path="/users/:userId" element={<DashboardLayout><UserDetailsPage /></DashboardLayout>} />
             <Route path="/orders" element={<DashboardLayout><OrdersPage /></DashboardLayout>} />
-            <Route path="/orders/details" element={<DashboardLayout><OrdersDetailsPage /></DashboardLayout>} />
+            <Route path="/orders/:orderId" element={<DashboardLayout><OrdersDetailsPage /></DashboardLayout>} />
         </Routes>
     )
 }

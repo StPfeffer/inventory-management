@@ -1,7 +1,9 @@
-import { fetchCustomer } from "@/actions/customer/fetch-customers";
 import { fetchOrder } from "@/actions/order/fetch-orders";
-import { batchDeleteOrderItem, deleteOrderItem } from "@/actions/order/order-item/delete-order-item";
-import { fetchOrderItem } from "@/actions/order/order-item/fetch-order-items";
+import {
+    batchDeleteOrderItem,
+    deleteOrderItem
+} from "@/actions/order/order-item/delete-order-item";
+import { fetchOrderItemsByOrder } from "@/actions/order/order-item/fetch-order-items";
 import { ContentLayout } from "@/components/admin-panel/layout/content-layout";
 import { orderItemColumns } from "@/components/admin-panel/orders/order-items/data-table/columns/order-item-columns";
 import NewOrderItemDialog from "@/components/admin-panel/orders/order-items/dialog/new-order-item-dialog";
@@ -28,11 +30,19 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Customer } from "@/types/customer";
+import { formatDate } from "date-fns";
 import { RefreshCwIcon } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState
+} from "react";
 import { useParams } from "react-router-dom";
-import { Order, OrderItem } from "shared/types/order";
+import { Customer } from "shared/types/customer";
+import {
+    Order,
+    OrderItem
+} from "shared/types/order";
 
 const OrderDetailsPage = () => {
     const { orderId } = useParams();
@@ -58,22 +68,10 @@ const OrderDetailsPage = () => {
             } else {
                 const orderData = fetchedOrder?.success?.data;
                 setOrder(orderData);
+                setCustomer(orderData.customer);
 
-                if (orderData?.customerId) {
-                    const fetchedCustomer = await fetchCustomer(orderData.customerId);
-
-                    if (fetchedCustomer.error) {
-                        toast({
-                            title: "Error",
-                            description: fetchedCustomer.error.message,
-                        });
-                    } else {
-                        setCustomer(fetchedCustomer.success?.data);
-                    }
-                }
-
-                if (orderData?.customerId) {
-                    const fetchedItems = await fetchOrderItem(orderData.customerId);
+                if (orderData?.id) {
+                    const fetchedItems = await fetchOrderItemsByOrder(orderData.id);
 
                     if (fetchedItems.error) {
                         toast({
@@ -163,6 +161,7 @@ const OrderDetailsPage = () => {
                         <TabsTrigger value="overview">Overview</TabsTrigger>
                         <TabsTrigger value="order-items">Order Items</TabsTrigger>
                     </TabsList>
+
                     <TabsContent value="overview">
                         <Card
                             className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
@@ -179,7 +178,6 @@ const OrderDetailsPage = () => {
                                 <div className="my-4">
                                     <p className="font-semibold">Order id</p>
                                     <p>
-                                        511518619851
                                         {order?.id}
                                     </p>
                                 </div>
@@ -187,14 +185,13 @@ const OrderDetailsPage = () => {
                                 <div className="my-4">
                                     <p className="font-semibold">Date</p>
                                     <p>
-                                        {order?.date === null ? "Null" : order?.date.toLocaleDateString() || "Null"}
+                                        {order?.date ? formatDate(order.date, "PPP") : "-"}
                                     </p>
                                 </div>
 
                                 <div className="my-4">
                                     <p className="font-semibold">Status</p>
                                     <p>
-                                        Cancelled
                                         {order?.status}
                                     </p>
                                 </div>
@@ -202,7 +199,6 @@ const OrderDetailsPage = () => {
                                 <div className="my-4">
                                     <p className="font-semibold">Customer</p>
                                     <p>
-                                        Rodolfo
                                         {customer?.name}
                                     </p>
                                 </div>
@@ -210,8 +206,12 @@ const OrderDetailsPage = () => {
                                 <div className="my-4">
                                     <p className="font-semibold">Total</p>
                                     <p>
-                                        R$ 24,52
-                                        {order?.total}
+                                        {order?.total ? new Intl.NumberFormat("en-US", {
+                                            style: "currency",
+                                            currency: "USD",
+                                        }).format(order?.total!)
+                                            : "-"
+                                        }
                                     </p>
                                 </div>
                             </CardContent>
@@ -248,9 +248,9 @@ const OrderDetailsPage = () => {
                             </CardHeader>
 
 
-                            <CardContent>   
+                            <CardContent>
                                 <DataTable
-                                    columns={orderItemColumns({ onEdit, onDelete})}
+                                    columns={orderItemColumns({ onEdit, onDelete })}
                                     data={orderItems}
                                     searchPlaceholder="Search order items..."
                                     searchColumn="name"

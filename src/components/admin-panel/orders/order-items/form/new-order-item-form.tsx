@@ -22,9 +22,15 @@ import { createOrderItem } from "@/actions/order/order-item/create-order-item";
 import { Product } from "shared/types/product";
 import { fetchProducts } from "@/actions/products/fetch-products";
 import MoneyInput from "@/components/geral/money-input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 const formSchema = z.object({
     orderId: z
@@ -32,11 +38,7 @@ const formSchema = z.object({
         .refine((val) => !Number.isNaN(parseInt(val, 10)), {
             message: "Expected number, received a string"
         }),
-    productId: z
-        .string({ required_error: "Please select a product." })
-        .refine((val) => !Number.isNaN(parseInt(val, 10)), {
-            message: "Expected number, received a string"
-        }),
+    product: z.string({ required_error: "Please select a product." }),
     quantity: z
         .string()
         .refine((val) => !Number.isNaN(parseFloat(val)), {
@@ -46,8 +48,6 @@ const formSchema = z.object({
         .number()
         .gt(0, "Price must be greater than 0."),
 });
-
-
 
 interface NewOrderItemFormProps {
     _onSubmit: () => void;
@@ -87,9 +87,9 @@ const NewOrderItemForm = ({
 
     useEffect(() => {
         if (orderItem) {
-            form.reset({    
+            form.reset({
                 orderId: orderItem.orderId.toString(),
-                productId: orderItem.productId.toString(),
+                product: JSON.stringify(orderItem.product),
                 quantity: orderItem.quantity.toString(),
                 unitPrice: orderItem.unitPrice,
             });
@@ -101,7 +101,7 @@ const NewOrderItemForm = ({
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const orderItemInfo: OrderItem = {
             orderId: parseInt(values.orderId),
-            productId: parseInt(values.productId),
+            product: JSON.parse(values.product) as Product,
             quantity: parseInt(values.quantity),
             unitPrice: values.unitPrice,
         }
@@ -139,9 +139,9 @@ const NewOrderItemForm = ({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
+                <FormField
                     control={form.control}
-                    name="productId"
+                    name="product"
                     render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel>Product</FormLabel>
@@ -166,7 +166,7 @@ const NewOrderItemForm = ({
                                             {products && products.map((product) =>
                                                 <SelectItem
                                                     key={product.id}
-                                                    value={product.id ? product.id.toString() : "-1"}
+                                                    value={JSON.stringify(product)}
                                                 >
                                                     {product.name}
                                                 </SelectItem>
@@ -182,8 +182,6 @@ const NewOrderItemForm = ({
                 />
 
                 <div className="flex w-full justify-between space-x-5">
-
-
                     <FormField
                         control={form.control}
                         name="quantity"
@@ -206,8 +204,6 @@ const NewOrderItemForm = ({
                         name="unitPrice"
                     />
                 </div>
-
-
 
                 <div className="flex justify-end">
                     <Button type="submit">

@@ -1,7 +1,7 @@
-import { OrderService } from "@/services/order-service";
+import { OrderItemService } from "@/services/order-item-service";
 import { ActionResponse } from "@/types/action";
 
-const orderItemService = new OrderService();
+const orderItemService = new OrderItemService();
 
 export const deleteOrderItem = async (id: number): Promise<ActionResponse> => {
     try {

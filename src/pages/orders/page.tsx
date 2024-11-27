@@ -4,12 +4,28 @@ import { ContentLayout } from "@/components/admin-panel/layout/content-layout"
 import { orderColumns } from "@/components/admin-panel/orders/data-table/columns/order-columns"
 import NewOrderDialog from "@/components/admin-panel/orders/dialog/new-order-dialog"
 import { DataTable } from "@/components/data-table/data-table"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from "@/components/ui/breadcrumb"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card"
+import RefreshButton from "@/components/ui/refresh-button"
 import { useToast } from "@/hooks/use-toast"
-import { RefreshCwIcon } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import {
+    useCallback,
+    useEffect,
+    useState
+} from "react"
 import { Order } from "shared/types/order"
 
 const OrdersPage = () => {
@@ -74,7 +90,6 @@ const OrdersPage = () => {
         setIsDialogOpen(true);
     }, []);
 
-
     return (
         <ContentLayout title="Orders">
             <div className="flex w-full justify-between">
@@ -112,12 +127,7 @@ const OrdersPage = () => {
                         </div>
 
                         <div className="flex items-center ml-auto gap-2">
-                            <Button
-                                variant="ghost"
-                                className="relative h-10 w-10"
-                            >
-                                <RefreshCwIcon className="w-4 h-4" />
-                            </Button>
+                            <RefreshButton onClick={fetchData} />
 
                             <NewOrderDialog
                                 isOpen={isDialogOpen}
@@ -137,7 +147,7 @@ const OrdersPage = () => {
                             columns={orderColumns({ onEdit, onDelete })}
                             data={orders}
                             searchPlaceholder="Search orders..."
-                            searchColumn="name"
+                            searchColumn="id"
                             onDelete={onBatchDelete}
                         />
                     </CardContent>

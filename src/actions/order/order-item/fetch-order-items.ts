@@ -1,9 +1,9 @@
-import { OrderService } from "@/services/order-service";
+import { OrderItemService } from "@/services/order-item-service";
 import { ActionResponse } from "@/types/action";
 import { OrderItem } from "shared/types/order";
 
 
-const orderItemService = new OrderService();
+const orderItemService = new OrderItemService();
 
 export const fetchOrderItems = async (): Promise<ActionResponse> => {
     try {

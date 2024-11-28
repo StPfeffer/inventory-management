@@ -25,9 +25,11 @@ import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
 import NewSupplierDialog from "@/components/admin-panel/suppliers/dialog/new-supplier-dialog";
 import { supplierColumns } from "@/components/admin-panel/suppliers/data-table/columns/supplier-columns";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const SuppliersPage = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+    const { hasPermission } = useAuth();
 
     const { toast } = useToast();
 
@@ -95,7 +97,9 @@ const SuppliersPage = () => {
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
 
-                            <NewSupplierDialog />
+                            {hasPermission("admin") &&
+                                <NewSupplierDialog />
+                            }
                         </div>
                     </CardHeader>
 

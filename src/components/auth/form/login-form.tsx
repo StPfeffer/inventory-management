@@ -50,6 +50,7 @@ export function LoginForm() {
         name: "Admin",
         email: "admin@admin.com",
         password: "admin",
+        role: "admin"
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {

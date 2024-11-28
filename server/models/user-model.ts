@@ -20,22 +20,22 @@ export const getUserByEmail = (email: string): User | undefined => {
 }
 
 export const addUser = (user: Omit<User, "id">): User => {
-    const { name, email, password } = user;
+    const { name, email, password, role } = user;
     const stmt = db.prepare(
-        "INSERT INTO kf_user (name, email, password) VALUES (?, ?, ?)"
+        "INSERT INTO kf_user (name, email, password, role) VALUES (?, ?, ?, ?)"
     );
-    const info = stmt.run(name, email, password);
+    const info = stmt.run(name, email, password, role);
 
     return { id: info.lastInsertRowid as number, ...user };
 };
 
 export const updateUser = (id: number, user: Omit<User, "id">): void => {
-    const { name, email, password } = user;
+    const { name, email, password, role } = user;
     const stmt = db.prepare(
-        "UPDATE kf_user SET name = ?, email = ?, password = ? WHERE id = ?"
+        "UPDATE kf_user SET name = ?, email = ?, password = ?, role = ? WHERE id = ?"
     );
 
-    stmt.run(name, email, password, id);
+    stmt.run(name, email, password, role, id);
 };
 
 export const deleteUser = (id: number): void => {

@@ -64,6 +64,15 @@ export const userColumns = ({
         },
     },
     {
+        accessorKey: "role",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Role" sort={false} />
+        ),
+        meta: {
+            label: "Role"
+        },
+    },
+    {
         id: "actions",
         cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" onEdit={onEdit} onDelete={onDelete} />
     }

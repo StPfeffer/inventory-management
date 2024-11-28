@@ -25,13 +25,15 @@ import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
 import { ProductsDataTable } from "@/components/admin-panel/products/data-table/products-data-table";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const { hasPermission } = useAuth();
 
     const { toast } = useToast();
 
-    useEffect(() => {        
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -51,7 +53,7 @@ const ProductsPage = () => {
     return (
         <ContentLayout title="Products">
             <div className="flex w-full justify-between">
-            <Breadcrumb>
+                <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink asChild>
@@ -95,7 +97,9 @@ const ProductsPage = () => {
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
 
-                            <NewProductDialog />
+                            {hasPermission("admin") &&
+                                <NewProductDialog />
+                            }
                         </div>
                     </CardHeader>
 

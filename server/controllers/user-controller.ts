@@ -33,15 +33,15 @@ export const getUser = (req: Request, res: Response) => {
 };
 
 export const createUser = (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
-    const newUser = addUser({ name, email, password });
+    const { name, email, password, role } = req.body;
+    const newUser = addUser({ name, email, password, role });
     res.status(201).json(newUser);
 };
 
 export const editUser = (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
-    const { name, email, password } = req.body;
-    updateUser(id, { name, email, password });
+    const { name, email, password, role } = req.body;
+    updateUser(id, { name, email, password, role });
     res.status(204).send();
 };
 

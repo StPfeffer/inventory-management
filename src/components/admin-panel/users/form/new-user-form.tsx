@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { updateUser } from "@/actions/users/update-user";
 import { ActionResponse } from "@/types/action";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const formSchema = z.object({
     name: z
@@ -32,7 +33,10 @@ const formSchema = z.object({
     password: z
         .string({ required_error: "Please enter a valid password." })
         .min(8, "Password must be at least 8 characters.")
-        .max(100, { message: 'Password should be shorter than 100 characteres.' })
+        .max(100, { message: 'Password should be shorter than 100 characteres.' }),
+    role: z.enum(["admin", "common"], {
+        required_error: "Please select a valid role.",
+    }),
 });
 
 interface NewUserFormProps {
@@ -51,13 +55,15 @@ const NewUserForm = ({
 
     const { toast } = useToast();
     const navigate = useNavigate();
+    const roles = ["admin", "common"];
 
     useEffect(() => {
         if (user) {
             form.reset({
                 name: user.name,
                 email: user.email,
-                password: user.password
+                password: user.password,
+                role: user.role
             });
         } else {
             form.reset();
@@ -68,22 +74,23 @@ const NewUserForm = ({
         const userInfo: User = {
             name: values.name,
             email: values.email,
-            password: values.password
-        }
-
+            password: values.password,
+            role: values.role,
+        };
+    
         let response: ActionResponse;
-
+    
         if (user) {
             response = await updateUser(user.id!, userInfo);
         } else {
             response = await createUser(userInfo);
         }
-
+    
         if (response.error) {
             toast({
                 title: "Error",
-                description: response.error.message
-            })
+                description: response.error.message,
+            });
         } else {
             toast({
                 title: "Success",
@@ -91,15 +98,17 @@ const NewUserForm = ({
                 action: (
                     <ToastAction
                         onClick={() => navigate("/users/" + response.success?.data?.id)}
-                        altText="View user">
+                        altText="View user"
+                    >
                         View
                     </ToastAction>
                 ),
             });
         }
-
+    
         _onSubmit();
     }
+    
 
     return (
         <Form {...form}>
@@ -153,6 +162,42 @@ const NewUserForm = ({
                         )}
                     />
                 </div>
+
+                <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Role</FormLabel>
+
+                            <FormControl>
+                                <Select
+                                    onValueChange={(value) => field.onChange(value)} // Define explicitamente o valor alterado
+                                    value={field.value || ""} // Previne valores `undefined` ou nulos
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue
+                                            placeholder={roles?.length ? "Select a role" : "No role found"}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Role</SelectLabel>
+                                            {roles.map((role) => (
+                                                <SelectItem key={role} value={role}>
+                                                    {role}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
 
                 <div className="flex justify-end">
                     <Button type="submit">

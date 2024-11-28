@@ -78,7 +78,8 @@ try {
             id INTEGER PRIMARY KEY,
             name TEXT,
             email TEXT,
-            password TEXT
+            password TEXT,
+            role TEXT
         );
 
         CREATE UNIQUE INDEX IF NOT EXISTS kf_user_unq ON kf_user(email);

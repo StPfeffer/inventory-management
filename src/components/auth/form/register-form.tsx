@@ -63,7 +63,7 @@ export function RegisterForm() {
             name: values.name,
             email: values.email,
             password: hashedPassword,
-            role: values.role
+            role: "common"
         };
 
         const createdUser = await createUser(userInfo);

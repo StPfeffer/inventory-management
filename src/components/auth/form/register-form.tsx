@@ -37,7 +37,10 @@ const formSchema = z.object({
     password: z
         .string({ required_error: "Please enter a valid password." })
         .min(8, "Password must be at least 8 characters.")
-        .max(100, { message: 'Password should be shorter than 100 characteres.' })
+        .max(100, { message: 'Password should be shorter than 100 characteres.' }),
+    role: z.enum(["admin", "common"], {
+        required_error: "Please select a valid role.",
+    }),
 });
 
 export function RegisterForm() {
@@ -48,7 +51,8 @@ export function RegisterForm() {
         defaultValues: {
             name: "",
             email: "",
-            password: ""
+            password: "",
+            role: "admin"
         }
     });
 
@@ -59,7 +63,7 @@ export function RegisterForm() {
             name: values.name,
             email: values.email,
             password: hashedPassword,
-            role: "common"
+            role: values.role
         };
 
         const createdUser = await createUser(userInfo);

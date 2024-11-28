@@ -8,6 +8,11 @@ function openDb(filename: string): Database {
     return db;
 }
 
+function columnExists(tableName: string, columnName: string): boolean {
+    const tableInfo = db.prepare(`PRAGMA table_info(${tableName});`).all();
+    return tableInfo.some((column: any) => column.name === columnName);
+}
+
 const db = openDb("inventory.db");
 
 try {
@@ -80,6 +85,23 @@ try {
         CREATE UNIQUE INDEX IF NOT EXISTS kf_supplier_unq ON kf_supplier(document);
         CREATE UNIQUE INDEX IF NOT EXISTS kf_customer_unq ON kf_customer(document);
     `);
+    if (columnExists('kf_order', 'data')) {
+        db.exec(`
+            CREATE TABLE kf_order_new (
+                id INTEGER PRIMARY KEY,
+                customer_id INTEGER,
+                date TEXT,
+                total REAL,
+                status TEXT
+            );
+        `);
+        db.exec(`
+            INSERT INTO kf_order_new (id, customer_id, date, total, status)
+            SELECT id, customer_id, data, total, status FROM kf_order;
+        `);
+        db.exec(`DROP TABLE kf_order;`);
+        db.exec(`ALTER TABLE kf_order_new RENAME TO kf_order;`);
+    }
 } catch (error) {
     console.error("Error creating tables:", error);
 }

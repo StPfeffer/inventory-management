@@ -56,10 +56,14 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(path)}>
                     View
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onEdit ? onEdit!(row.original) : {}}>
+                <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => onEdit ? onEdit!(row.original) : {}}
+                >
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                    className="cursor-pointer"
                     onClick={() => navigator.clipboard.writeText(row.getValue(acessorKey))}
                 >
                     Copy

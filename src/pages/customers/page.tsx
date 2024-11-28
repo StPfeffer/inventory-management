@@ -30,11 +30,13 @@ import {
     deleteCustomer
 } from "@/actions/customer/delete-customer";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+    const { hasPermission } = useAuth();
 
     const { toast } = useToast();
 
@@ -131,16 +133,18 @@ const CustomersPage = () => {
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
 
-                            <NewCustomerDialog
-                                isOpen={isDialogOpen}
-                                onOpenChange={(value: boolean) => {
-                                    setIsDialogOpen(value);
-                                    if (!value) {
-                                        setSelectedCustomer(null);
-                                    }
-                                }}
-                                customer={selectedCustomer}
-                            />
+                            {hasPermission("admin") &&
+                                <NewCustomerDialog
+                                    isOpen={isDialogOpen}
+                                    onOpenChange={(value: boolean) => {
+                                        setIsDialogOpen(value);
+                                        if (!value) {
+                                            setSelectedCustomer(null);
+                                        }
+                                    }}
+                                    customer={selectedCustomer}
+                                />
+                            }
                         </div>
                     </CardHeader>
 

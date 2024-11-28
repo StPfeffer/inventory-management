@@ -15,7 +15,7 @@ export const getAllOrders = (): Order[] => {
             c.document AS customer_document,
             c.address AS customer_address
         FROM kf_order o
-            LEFT JOIN kf_customer c ON o.customer_id = c.id
+            INNER JOIN kf_customer c ON o.customer_id = c.id
     `);
 
     const rows = stmt.all() as {

@@ -16,6 +16,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Supplier } from "shared/types/supplier";
 import { createSupplier } from "@/actions/supplier/create-supplier";
+import { useEffect } from "react";
+import { ActionResponse } from "@/types/action";
+import { updateSupplier } from "@/actions/supplier/update-supplier";
 
 const formSchema = z.object({
     name: z
@@ -32,27 +35,52 @@ const formSchema = z.object({
         .min(10, "Adress must be at least 10 characters.")
 });
 
+interface NewSupplierFormProps {
+    _onSubmit: () => void;
+    supplier: Supplier | null;
+}
+
+
 const NewSupplierForm = ({
-    _onSubmit
-}: {
-    _onSubmit: () => void
-}) => {
+    _onSubmit,
+    supplier
+}: NewSupplierFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
+        mode: 'onChange'
     });
 
     const { toast } = useToast();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (supplier) {
+            form.reset({
+                name: supplier.name,
+                address: supplier.address,
+                contact: supplier.contact,
+                document: supplier.document,
+            });
+        } else {
+            form.reset();
+        }
+    }, [supplier]);
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const supplier: Supplier = {
+        const supplierInfo: Supplier = {
             name: values.name,
             document: values.document,
             contact: values.contact,
             address: values.address,
         }
 
-        const response = await createSupplier(supplier);
+        let response: ActionResponse;
+
+        if (supplier) {
+            response = await updateSupplier(supplier.id!, supplierInfo);
+        } else {
+            response = await createSupplier(supplierInfo);
+        }
 
         if (response.error) {
             toast({
@@ -66,7 +94,7 @@ const NewSupplierForm = ({
                 action: (
                     <ToastAction
                         onClick={() => navigate("/suppliers/" + response.success?.data?.id)}
-                        altText="View customer">
+                        altText="View supplier">
                         View
                     </ToastAction>
                 ),
@@ -146,7 +174,9 @@ const NewSupplierForm = ({
                 />
 
                 <div className="flex justify-end">
-                    <Button type="submit">Create</Button>
+                    <Button type="submit">
+                        {supplier ? "Update" : "Create"}
+                    </Button>
                 </div>
             </form>
         </Form >

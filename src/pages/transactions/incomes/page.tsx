@@ -25,10 +25,11 @@ import { fetchIncomes } from "@/actions/transactions/fetch-incomes";
 import { incomesColumns } from "@/components/admin-panel/transactions/data-table/columns/incomes-columns";
 import NewIncomeDialog from "@/components/admin-panel/transactions/dialog/new-income-dialog";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const IncomesPage = () => {
     const [incomes, setIncomes] = useState<Transaction[]>([]);
-
+    const { hasPermission } = useAuth()
     const { toast } = useToast();
 
     useEffect(() => {        
@@ -92,8 +93,9 @@ const IncomesPage = () => {
 
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
-
-                            <NewIncomeDialog />
+                            {hasPermission("admin") &&
+                                <NewIncomeDialog />
+                            }
                         </div>
                     </CardHeader>
 

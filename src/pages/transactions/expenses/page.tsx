@@ -25,10 +25,11 @@ import {
 import { DataTable } from "@/components/data-table/data-table";
 import { useToast } from "@/hooks/use-toast";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const ExpensesPage = () => {
     const [expenses, setExpenses] = useState<Transaction[]>([]);
-
+    const { hasPermission } = useAuth()
     const { toast } = useToast();
 
     useEffect(() => {        
@@ -92,8 +93,9 @@ const ExpensesPage = () => {
 
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
-
-                            <NewExpenseDialog />
+                            {hasPermission("admin") &&
+                                <NewExpenseDialog />
+                            }
                         </div>
                     </CardHeader>
 

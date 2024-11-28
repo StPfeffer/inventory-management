@@ -16,13 +16,13 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
+import RefreshButton from "@/components/ui/refresh-button";
 import {
     Tabs,
     TabsContent,
@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "date-fns";
-import { RefreshCwIcon } from "lucide-react";
 import {
     useCallback,
     useEffect,
@@ -57,36 +56,36 @@ const OrderDetailsPage = () => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchData = async () => {
-            const fetchedOrder = await fetchOrder(orderId!);
-
-            if (fetchedOrder.error) {
-                toast({
-                    title: "Error",
-                    description: fetchedOrder.error.message,
-                });
-            } else {
-                const orderData = fetchedOrder?.success?.data;
-                setOrder(orderData);
-                setCustomer(orderData.customer);
-
-                if (orderData?.id) {
-                    const fetchedItems = await fetchOrderItemsByOrder(orderData.id);
-
-                    if (fetchedItems.error) {
-                        toast({
-                            title: "Error",
-                            description: fetchedItems.error.message,
-                        });
-                    } else {
-                        setOrderItems(fetchedItems.success?.data);
-                    }
-                }
-            }
-        };
-
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        const fetchedOrder = await fetchOrder(orderId!);
+
+        if (fetchedOrder.error) {
+            toast({
+                title: "Error",
+                description: fetchedOrder.error.message,
+            });
+        } else {
+            const orderData = fetchedOrder?.success?.data;
+            setOrder(orderData);
+            setCustomer(orderData.customer);
+
+            if (orderData?.id) {
+                const fetchedItems = await fetchOrderItemsByOrder(orderData.id);
+
+                if (fetchedItems.error) {
+                    toast({
+                        title: "Error",
+                        description: fetchedItems.error.message,
+                    });
+                } else {
+                    setOrderItems(fetchedItems.success?.data);
+                }
+            }
+        }
+    };
 
     const onDelete = useCallback(async (order: OrderItem) => {
         const response = await deleteOrderItem(order.id!);
@@ -227,14 +226,10 @@ const OrderDetailsPage = () => {
                                 </div>
 
                                 <div className="flex items-center ml-auto gap-2">
-                                    <Button
-                                        variant="ghost"
-                                        className="relative h-10 w-10"
-                                    >
-                                        <RefreshCwIcon className="w-4 h-4" />
-                                    </Button>
+                                    <RefreshButton onClick={fetchData} />
 
                                     <NewOrderItemDialog
+                                        orderId={parseInt(orderId!)}
                                         isOpen={isDialogOpen}
                                         onOpenChange={(value: boolean) => {
                                             setIsDialogOpen(value);
@@ -253,7 +248,7 @@ const OrderDetailsPage = () => {
                                     columns={orderItemColumns({ onEdit, onDelete })}
                                     data={orderItems}
                                     searchPlaceholder="Search order items..."
-                                    searchColumn="name"
+                                    searchColumn="productId"
                                     onDelete={onBatchDeleteItems}
                                 />
                             </CardContent>

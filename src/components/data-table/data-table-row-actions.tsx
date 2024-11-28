@@ -19,6 +19,7 @@ import {
     DialogTrigger
 } from "../ui/dialog";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/auth-context-provider";
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
@@ -40,6 +41,7 @@ export function DataTableRowActions<TData>({
     const navigate = useNavigate();
     const location = useLocation();
     const path = location.pathname + "/" + row.getValue(acessorKey);
+    const { hasPermission } = useAuth();
 
     return (
         <DropdownMenu>
@@ -56,12 +58,16 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(path)}>
                     View
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => onEdit ? onEdit!(row.original) : {}}
-                >
-                    Edit
-                </DropdownMenuItem>
+
+                {hasPermission("admin") &&
+                    <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => onEdit ? onEdit!(row.original) : {}}
+                    >
+                        Edit
+                    </DropdownMenuItem>
+                }
+
                 <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => navigator.clipboard.writeText(row.getValue(acessorKey))}
@@ -69,36 +75,39 @@ export function DataTableRowActions<TData>({
                     Copy
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                    <Dialog>
-                        <DialogTrigger className="w-full flex">
-                            <div>
-                                Delete
-                            </div>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Are you sure?</DialogTitle>
-                                <DialogDescription>
-                                    Do you want to delete the entry? Deleting this entry cannot be
-                                    undone.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="outline">
-                                        Cancel
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button onClick={() => handleDeleteClick()}>
-                                        Delete
-                                    </Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                </DropdownMenuItem>
+
+                {hasPermission("admin") &&
+                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                        <Dialog>
+                            <DialogTrigger className="w-full flex">
+                                <div>
+                                    Delete
+                                </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Are you sure?</DialogTitle>
+                                    <DialogDescription>
+                                        Do you want to delete the entry? Deleting this entry cannot be
+                                        undone.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button variant="outline">
+                                            Cancel
+                                        </Button>
+                                    </DialogClose>
+                                    <DialogClose asChild>
+                                        <Button onClick={() => handleDeleteClick()}>
+                                            Delete
+                                        </Button>
+                                    </DialogClose>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </DropdownMenuItem>
+                }
             </DropdownMenuContent>
         </DropdownMenu>
     );

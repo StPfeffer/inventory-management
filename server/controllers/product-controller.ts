@@ -4,6 +4,7 @@ import {
 } from "express";
 import {
     addProduct,
+    batchDeleteProduct,
     deleteProduct,
     getAllProducts,
     getProductById,
@@ -41,5 +42,11 @@ export const editProduct = (req: Request, res: Response) => {
 export const removeProduct = (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
     deleteProduct(id);
+    res.status(204).send();
+};
+
+export const batchRemoveProduct = (req: Request, res: Response) => {
+    const ids = req.body;
+    batchDeleteProduct(ids);
     res.status(204).send();
 };

@@ -29,11 +29,14 @@ import {
 } from "@/actions/transactions/delete-transaction";
 import { transactionColumns } from "@/components/admin-panel/transactions/data-table/columns/transactions-columns";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const TransactionsPage = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
+
+    const { hasPermission } = useAuth()
 
     const { toast } = useToast();
 
@@ -143,17 +146,18 @@ const TransactionsPage = () => {
 
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
-
-                            <NewTransactionDialog
-                                isOpen={isDialogOpen}
-                                onOpenChange={(value: boolean) => {
-                                    setIsDialogOpen(value);
-                                    if (!value) {
-                                        setSelectedTransaction(null);
-                                    }
-                                }}
-                                transaction={selectedTransaction}
-                            />
+                            {hasPermission("admin") &&
+                                <NewTransactionDialog
+                                    isOpen={isDialogOpen}
+                                    onOpenChange={(value: boolean) => {
+                                        setIsDialogOpen(value);
+                                        if (!value) {
+                                            setSelectedTransaction(null);
+                                        }
+                                    }}
+                                    transaction={selectedTransaction}
+                                />
+                            }
                         </div>
                     </CardHeader>
 

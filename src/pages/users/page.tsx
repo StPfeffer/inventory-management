@@ -30,12 +30,14 @@ import {
     deleteUser
 } from "@/actions/users/delete-user";
 import RefreshButton from "@/components/ui/refresh-button";
+import { useAuth } from "@/components/auth/auth-context-provider";
 
 const UsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
-
+    const { hasPermission } = useAuth()
+    
     const { toast } = useToast();
 
     useEffect(() => {
@@ -130,17 +132,18 @@ const UsersPage = () => {
 
                         <div className="flex items-center ml-auto gap-2">
                             <RefreshButton onClick={fetchData} />
-
-                            <NewUserDialog
-                                isOpen={isDialogOpen}
-                                onOpenChange={(value: boolean) => {
-                                    setIsDialogOpen(value);
-                                    if (!value) {
-                                        setSelectedUser(null);
-                                    }
-                                }}
-                                user={selectedUser}
-                            />
+                            {hasPermission("admin") &&
+                                <NewUserDialog
+                                    isOpen={isDialogOpen}
+                                    onOpenChange={(value: boolean) => {
+                                        setIsDialogOpen(value);
+                                        if (!value) {
+                                            setSelectedUser(null);
+                                        }
+                                    }}
+                                    user={selectedUser}
+                                />
+                            }
                         </div>
                     </CardHeader>
 

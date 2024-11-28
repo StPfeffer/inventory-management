@@ -1,23 +1,18 @@
-import { useEffect } from "react";
-import { useAuth } from "./auth-context-provider";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../auth/auth-context-provider";
 
-interface RoleProtectedRouteProps {
-    children: JSX.Element;
-    requiredRole: "admin" | "common";
-}
-
-const RoleProtectedRoute = ({ children, requiredRole }: RoleProtectedRouteProps) => {
+const ProtectedRoute = ({ children, requiredRole }: { children: JSX.Element; requiredRole: string }) => {
     const { isAuthenticated, hasPermission } = useAuth();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!isAuthenticated || !hasPermission(requiredRole)) {
-            navigate("/unauthorized");
-        }
-    }, [isAuthenticated, hasPermission, requiredRole, navigate]);
+    if (!isAuthenticated) {
+        return <Navigate to="/login" />;
+    }
 
-    return isAuthenticated && hasPermission(requiredRole) ? children : null;
+    if (!hasPermission(requiredRole)) {
+        return <Navigate to="/unauthorized" />;
+    }
+
+    return children;
 };
 
-export default RoleProtectedRoute;
+export default ProtectedRoute;

@@ -72,6 +72,9 @@ export function LoginForm() {
 
         const isMatch = await bcrypt.compare(values.password, user.password);
 
+        console.log(values.password);
+        console.log(user.password);
+
         if (!isMatch) {
             form.setError("password", { type: "manual", message: "Invalid password. Please try again." });
 

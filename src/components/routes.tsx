@@ -20,6 +20,7 @@ import UsersPage from "@/pages/users/page";
 import UserDetailsPage from "@/pages/users/details";
 import OrdersPage from "@/pages/orders/page";
 import OrdersDetailsPage from "@/pages/orders/details";
+import ProtectedRoute from "./auth/protected-route";
 
 function CustomRoutes() {
     return (

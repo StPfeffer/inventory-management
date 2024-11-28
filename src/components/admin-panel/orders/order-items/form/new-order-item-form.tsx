@@ -16,7 +16,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ActionResponse } from "@/types/action";
-import { OrderItem } from "shared/types/order";
+import { Order, OrderItem } from "shared/types/order";
 import { updateOrderItem } from "@/actions/order/order-item/update-order-item";
 import { createOrderItem } from "@/actions/order/order-item/create-order-item";
 import { Product } from "shared/types/product";
@@ -31,13 +31,10 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
+import { updateOrder } from "@/actions/order/update-order";
+import { fetchOrder } from "@/actions/order/fetch-orders";
 
 const formSchema = z.object({
-    orderId: z
-        .string({ required_error: "Please select a order." })
-        .refine((val) => !Number.isNaN(parseInt(val, 10)), {
-            message: "Expected number, received a string"
-        }),
     product: z.string({ required_error: "Please select a product." }),
     quantity: z
         .string()
@@ -50,11 +47,13 @@ const formSchema = z.object({
 });
 
 interface NewOrderItemFormProps {
+    orderId: number;
     _onSubmit: () => void;
     orderItem: OrderItem | null;
 }
 
 const NewOrderItemForm = ({
+    orderId,
     _onSubmit,
     orderItem
 }: NewOrderItemFormProps) => {
@@ -64,8 +63,10 @@ const NewOrderItemForm = ({
     });
 
     const [products, setProducts] = useState<Product[]>([]);
+    const [order, setOrder] = useState<Order | null>(null);
 
     useEffect(() => {
+        console.log(orderId);
         const fetchData = async () => {
             const fetchedProducts = await fetchProducts();
 
@@ -86,9 +87,10 @@ const NewOrderItemForm = ({
     const navigate = useNavigate();
 
     useEffect(() => {
+        fetchOrderr(orderId.toString());
+        
         if (orderItem) {
             form.reset({
-                orderId: orderItem.orderId.toString(),
                 product: JSON.stringify(orderItem.product),
                 quantity: orderItem.quantity.toString(),
                 unitPrice: orderItem.unitPrice,
@@ -98,9 +100,16 @@ const NewOrderItemForm = ({
         }
     }, [orderItem]);
 
+    async function fetchOrderr(orderId: string) {
+        const thisOrder = await fetchOrder(orderId);
+        setOrder(thisOrder.success?.data);
+    }
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(orderId);
+        console.log(values);
         const orderItemInfo: OrderItem = {
-            orderId: parseInt(values.orderId),
+            orderId: orderId,
             product: JSON.parse(values.product) as Product,
             quantity: parseInt(values.quantity),
             unitPrice: values.unitPrice,
@@ -131,6 +140,16 @@ const NewOrderItemForm = ({
                     </ToastAction>
                 ),
             });
+
+            const localOrder: Order = {
+                id: order!.id,
+                date: order!.date,
+                customer: order!.customer,
+                status: order!.status,
+                total: (order!.total + (response.success?.data?.unitPrice * response.success?.data?.quantity))
+            };
+
+            await updateOrder(orderId, localOrder);
         }
 
         _onSubmit();

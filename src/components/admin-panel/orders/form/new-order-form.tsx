@@ -43,6 +43,9 @@ import {
 } from "@/components/ui/select";
 import MoneyInput from "@/components/geral/money-input";
 import { Customer } from "shared/types/customer";
+import { Transaction } from "shared/types/transaction";
+import { ValueSetter } from "node_modules/date-fns/parse/_lib/Setter";
+import { createTransaction } from "@/actions/transactions/create-transaction";
 
 const formSchema = z.object({
     date: z.date({ required_error: "A date is required." }),
@@ -141,6 +144,16 @@ const NewOrderForm = ({
                     </ToastAction>
                 ),
             });
+
+            const transactionInfo: Transaction = {
+                date: values.date,
+                type: "entry",
+                price: values.total,
+                orderId: response.success?.data?.id,
+                productId: null
+            }
+
+            const response2 = await createTransaction(transactionInfo);
         }
 
         _onSubmit();

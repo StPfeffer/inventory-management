@@ -38,6 +38,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Supplier } from "shared/types/supplier";
 import { fetchSuppliers } from "@/actions/supplier/fetch-supplier";
+import { ActionResponse } from "@/types/action";
+import { updateProduct } from "@/actions/products/update-product";
 
 const formSchema = z.object({
     name: z
@@ -61,11 +63,15 @@ const formSchema = z.object({
         }),
 });
 
+interface NewProductFormProps {
+    _onSubmit: () => void;
+    product: Product | null;
+}
+
 const NewProductForm = ({
-    _onSubmit
-}: {
-    _onSubmit: () => void
-}) => {
+    _onSubmit,
+    product
+}: NewProductFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -95,8 +101,22 @@ const NewProductForm = ({
     const { toast } = useToast();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (product) {
+            form.reset({
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                quantity: product.quantity.toString(),
+                supplierId: product.supplierId.toString(),
+            });
+        } else {
+            form.reset();
+        }
+    }, [product]);
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const product: Product = {
+        const productInfo: Product = {
             name: values.name,
             description: values.description,
             price: values.price,
@@ -105,7 +125,13 @@ const NewProductForm = ({
             supplierId: parseInt(values.supplierId)
         }
 
-        const response = await createProduct(product);
+        let response: ActionResponse;
+
+        if (product) {
+            response = await updateProduct(product.id!, productInfo);
+        } else {
+            response = await createProduct(productInfo);
+        }
 
         if (response.error) {
             toast({

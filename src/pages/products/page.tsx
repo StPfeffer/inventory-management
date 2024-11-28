@@ -16,19 +16,24 @@ import {
 } from "@/components/ui/card";
 import { Product } from "shared/types/product";
 import {
+    useCallback,
     useEffect,
     useState
 } from "react";
 import NewProductDialog from "@/components/admin-panel/products/dialog/new-product-dialog";
-import { productsColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
+import { productColumns } from "@/components/admin-panel/products/data-table/columns/product-columns";
 import { fetchProducts } from "@/actions/products/fetch-products";
 import { useToast } from "@/hooks/use-toast";
 import { ProductsDataTable } from "@/components/admin-panel/products/data-table/products-data-table";
 import RefreshButton from "@/components/ui/refresh-button";
 import { useAuth } from "@/components/auth/auth-context-provider";
+import { batchDeleteProduct, deleteProduct } from "@/actions/products/delete-product";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
     const { hasPermission } = useAuth();
 
     const { toast } = useToast();
@@ -49,6 +54,43 @@ const ProductsPage = () => {
             setProducts(fetchedProducts?.success?.data);
         }
     };
+
+    const onDelete = useCallback(async (product: Product) => {
+        const response = await deleteProduct(product.id!);
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onBatchDelete = useCallback(async (products: Product[]) => {
+        const response = await batchDeleteProduct(products.map(c => c.id!));
+
+        if (response.error) {
+            toast({
+                title: "Error",
+                description: response.error.message
+            });
+        } else {
+            toast({
+                title: "Success",
+                description: response?.success?.message
+            });
+        }
+    }, []);
+
+    const onEdit = useCallback((product: Product) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
+    }, []);
 
     return (
         <ContentLayout title="Products">
@@ -98,17 +140,27 @@ const ProductsPage = () => {
                             <RefreshButton onClick={fetchData} />
 
                             {hasPermission("admin") &&
-                                <NewProductDialog />
+                                <NewProductDialog
+                                    isOpen={isDialogOpen}
+                                    onOpenChange={(value: boolean) => {
+                                        setIsDialogOpen(value);
+                                        if (!value) {
+                                            setSelectedProduct(null);
+                                        }
+                                    }}
+                                    product={selectedProduct}
+                                />
                             }
                         </div>
                     </CardHeader>
 
                     <CardContent>
                         <ProductsDataTable
-                            columns={productsColumns}
+                            columns={productColumns({ onEdit, onDelete })}
                             data={products}
                             searchPlaceholder="Search products..."
                             searchColumn="name"
+                            onDelete={onBatchDelete}
                         />
                     </CardContent>
                 </Card>

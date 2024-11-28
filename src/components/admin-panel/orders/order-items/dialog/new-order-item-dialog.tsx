@@ -9,12 +9,14 @@ import { OrderItem } from "shared/types/order";
 import NewOrderItemForm from "../form/new-order-item-form";
 
 interface NewOrderItemDialogProps {
+    orderId: number;
     isOpen: boolean,
     onOpenChange: (value: boolean) => void;
     orderItem: OrderItem | null;
 }
 
 const NewOrderItemDialog = ({
+    orderId,
     isOpen,
     onOpenChange,
     orderItem
@@ -40,6 +42,7 @@ const NewOrderItemDialog = ({
                 </DialogTitle>
 
                 <NewOrderItemForm
+                    orderId={orderId}
                     orderItem={orderItem}
                     _onSubmit={() => { onOpenChange(false) }}
                 />

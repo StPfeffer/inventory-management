@@ -22,23 +22,19 @@ export type OrderStatus = "pending" | "processing" | "cancelled";
 interface OrderStatusDetailsProps {
     type: OrderStatus,
     description: string;
-    color: string;
 }
 
 export const orderStatusDetails: OrderStatusDetailsProps[] = [
     {
         type: "pending",
-        description: "Pending",
-        color: ""
+        description: "Pending"
     },
     {
         type: "processing",
-        description: "Processing",
-        color: ""
+        description: "Processing"
     },
     {
         type: "cancelled",
-        description: "Cancelled",
-        color: ""
+        description: "Cancelled"
     }
 ]

@@ -22,7 +22,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { User } from "shared/types/user";
 import { fetchUserByEmail } from "@/actions/users/fetch-users";
 
 const formSchema = z.object({
@@ -45,21 +44,8 @@ export function LoginForm() {
         }
     });
 
-    const adminUser: User = {
-        id: 1,
-        name: "Admin",
-        email: "admin@admin.com",
-        password: "admin",
-        role: "admin"
-    }
-
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const email = values.email;
-
-        if (email === "admin@admin.com") {
-            login({ ...adminUser });
-        }
-
         const fetchedUser = await fetchUserByEmail(email);
 
         if (fetchedUser.error) {

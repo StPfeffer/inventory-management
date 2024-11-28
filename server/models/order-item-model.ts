@@ -17,21 +17,21 @@ export const getAllOrderItems = (): OrderItem[] => {
             p.image AS product_image,
             p.supplier_id AS product_supplier_id
         FROM kf_order_item oi
-            LEFT JOIN kf_product p ON oi.product_id = p.id
+            INNER JOIN kf_product p ON oi.product_id = p.id
     `);
 
     const rows = stmt.all() as {
-        id: number,
-        order_id: number,
-        quantity: number,
-        unit_price: number,
-        product_id: number,
-        product_name: string,
-        product_description: string,
-        product_price: number,
-        product_quantity: number,
-        product_image: string,
-        product_supplier_id: number,
+        id: number;
+        order_id: number;
+        quantity: number;
+        unit_price: number;
+        product_id: number;
+        product_name: string;
+        product_description: string;
+        product_price: number;
+        product_quantity: number;
+        product_image: string;
+        product_supplier_id: number;
     }[];
 
     return rows.map((row) => ({
@@ -66,11 +66,11 @@ export const getOrderItemsByOrderId = (id: number): OrderItem[] | undefined => {
             p.image AS product_image,
             p.supplier_id AS product_supplier_id
         FROM kf_order_item oi
-            LEFT JOIN kf_product p ON oi.product_id = p.id
+            INNER JOIN kf_product p ON oi.product_id = p.id
         WHERE oi.order_id = ?
     `);
 
-    const rows = stmt.get(id) as {
+    const rows = stmt.all(id) as {
         id: number,
         order_id: number,
         quantity: number,
@@ -104,7 +104,7 @@ export const getOrderItemsByOrderId = (id: number): OrderItem[] | undefined => {
 export const addOrderItem = (orderItem: Omit<OrderItem, "id">): OrderItem => {
     const { orderId, product, quantity, unitPrice } = orderItem;
     const stmt = db.prepare(
-        "INSERT INTO kf_order_item (order_id, product_id, quantity, unitPrice) VALUES (?, ?, ?, ?)"
+        "INSERT INTO kf_order_item (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)"
     )
     const info = stmt.run(orderId, product.id, quantity, unitPrice);
 
@@ -114,7 +114,7 @@ export const addOrderItem = (orderItem: Omit<OrderItem, "id">): OrderItem => {
 export const updateOrderItem = (id: number, orderItem: Omit<OrderItem, "id">): void => {
     const { orderId, product, quantity, unitPrice } = orderItem;
     const stmt = db.prepare(
-        "UPDATE kf_order_item SET order_id = ?, product_id = ?, quantity = ?, unitPrice = ? WHERE id = ?"
+        "UPDATE kf_order_item SET order_id = ?, product_id = ?, quantity = ?, unit_price = ? WHERE id = ?"
     )
 
     stmt.run(orderId, product.id, quantity, unitPrice, id);

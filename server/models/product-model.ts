@@ -37,3 +37,14 @@ export const deleteProduct = (id: number): void => {
 
     stmt.run(id);
 };
+
+export const batchDeleteProduct = (ids: number[]): void => {
+    if (ids.length === 0) {
+        return;
+    }
+
+    const placeholders = ids.map(() => "?").join(", ");
+    const stmt = db.prepare(`DELETE FROM kf_product WHERE id IN (${placeholders})`);
+
+    stmt.run(...ids);
+}

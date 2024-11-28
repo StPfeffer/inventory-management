@@ -15,4 +15,16 @@ export class SupplierService {
         return axiosInstance.post("api/suppliers", supplier);
     }
 
+    update(id: number, supplier: Supplier) {
+        return axiosInstance.put("api/suppliers/" + id, supplier);
+    }
+
+    delete(id: number) {
+        return axiosInstance.delete("api/suppliers/" + id);
+    }
+
+    batchDelete(ids: number[]) {
+        return axiosInstance.post("api/suppliers/batch", ids);
+    }
+
 }

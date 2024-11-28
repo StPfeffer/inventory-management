@@ -5,14 +5,23 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Supplier } from "shared/types/supplier";
 import NewSupplierForm from "../form/new-supplier-form";
-import { useState } from "react";
 
-const NewSupplierDialog = () => {
-    const [open, setOpen] = useState(false);
+interface NewSupplierDialogProps {
+    isOpen: boolean,
+    onOpenChange: (value: boolean) => void;
+    supplier: Supplier | null;
+}
+
+const NewSupplierDialog = ({
+    isOpen,
+    onOpenChange,
+    supplier
+}: NewSupplierDialogProps) => {
 
     return (
-        <Dialog modal open={open} onOpenChange={setOpen}>
+        <Dialog modal open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 sm">
                 Add Supplier
             </DialogTrigger>
@@ -25,7 +34,10 @@ const NewSupplierDialog = () => {
                     Create a new supplier
                 </DialogTitle>
 
-                <NewSupplierForm _onSubmit={() => { setOpen(false) }} />
+                <NewSupplierForm
+                    supplier={supplier}
+                    _onSubmit={() => { onOpenChange(false) }}
+                />
             </DialogContent>
         </Dialog >
     )

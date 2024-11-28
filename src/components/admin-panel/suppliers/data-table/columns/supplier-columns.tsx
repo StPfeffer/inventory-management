@@ -5,7 +5,15 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { Supplier } from "shared/types/supplier";
 
-export const supplierColumns: ColumnDef<Supplier>[] = [
+interface SupplierColumnsProps {
+    onEdit: (order: Supplier) => void,
+    onDelete: (order: Supplier) => void
+}
+
+export const supplierColumns = ({
+    onEdit,
+    onDelete
+}: SupplierColumnsProps): ColumnDef<Supplier>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -77,6 +85,6 @@ export const supplierColumns: ColumnDef<Supplier>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" />
+        cell: ({ row }) => <DataTableRowActions row={row} acessorKey="id" onEdit={onEdit} onDelete={onDelete} />
     }
 ];

@@ -34,6 +34,7 @@ export const updateUser = (id: number, user: Omit<User, "id">): void => {
     const stmt = db.prepare(
         "UPDATE kf_user SET name = ?, email = ?, password = ?, role = ? WHERE id = ?"
     );
+    console.log(password);
 
     stmt.run(name, email, password, role, id);
 };
